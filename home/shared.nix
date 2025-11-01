@@ -79,7 +79,7 @@
   # Shell configuration
   programs.zsh = {
     enable = true;
-    autosuggestions.enable = true;
+    enableAutosuggestions = true;
     syntaxHighlighting.enable = true;
     initExtra = ''
       eval "$(zoxide init zsh)"

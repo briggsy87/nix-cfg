@@ -31,12 +31,14 @@ Host-specific system-level settings. Each file receives `hostname` and `username
   - Enables Aerospace (disables Homebrew)
 
 - **`hosts/thinkpad.nix`**: NixOS configuration for Linux
-  - Bootloader (systemd-boot)
+  - **Imports `/etc/nixos/hardware-configuration.nix`** (critical - contains disk/LUKS/hardware settings)
+  - Bootloader (systemd-boot) with latest kernel
   - Networking (NetworkManager)
-  - Desktop environment (XFCE + X11)
+  - Desktop environment (GNOME + GDM)
+  - Audio (PipeWire)
   - User account creation
-  - Docker, SSH daemon
-  - **Important**: Set `time.timeZone` before first use
+  - Docker enabled
+  - System state version: 25.05
 
 ### Home Manager Structure (`home/`)
 

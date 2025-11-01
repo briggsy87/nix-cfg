@@ -73,12 +73,12 @@
     in {
       # Generate darwin configurations
       darwinConfigurations = builtins.listToAttrs (
-        map mkSystem (builtins.filter (h: hosts.${h}.platform == "darwin") (builtins.attrNames hosts))
+        map (h: mkSystem h hosts.${h}) (builtins.filter (h: hosts.${h}.platform == "darwin") (builtins.attrNames hosts))
       );
 
       # Generate nixos configurations
       nixosConfigurations = builtins.listToAttrs (
-        map mkSystem (builtins.filter (h: hosts.${h}.platform == "nixos") (builtins.attrNames hosts))
+        map (h: mkSystem h hosts.${h}) (builtins.filter (h: hosts.${h}.platform == "nixos") (builtins.attrNames hosts))
       );
 
       # Formatter for all systems

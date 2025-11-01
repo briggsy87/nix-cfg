@@ -105,11 +105,12 @@ darwin-rebuild switch --flake ~/nix-config#m4pro
 
 #### NixOS (Linux)
 
+**Important:** `hosts/thinkpad.nix` imports `/etc/nixos/hardware-configuration.nix` which must exist on your system. This file contains your hardware-specific settings (disk partitions, LUKS encryption, kernel modules, etc.).
+
 First-time setup:
 ```bash
-# Generate hardware configuration
-sudo nixos-generate-config --show-hardware-config > /tmp/hardware.nix
-# Manually merge /tmp/hardware.nix into hosts/thinkpad.nix
+# The hardware-configuration.nix should already exist from your initial NixOS install
+# It's located at /etc/nixos/hardware-configuration.nix
 
 # Apply configuration
 sudo nixos-rebuild switch --flake ~/nix-config#thinkpad

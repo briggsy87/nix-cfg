@@ -25,13 +25,7 @@
     "karabiner/karabiner.json".text = builtins.readFile ./karabiner.json;
     "ghostty/config".text = builtins.readFile ./ghostty/config;
     "alacritty/alacritty.toml".text = builtins.readFile ./alacritty.toml;
-    "tmux/tmux.conf" = {
-      source = ./tmux/tmux.conf;
-      optional = true;
-    };
-    "zellij/config.kdl" = {
-      source = ./zellij/config.kdl;
-      optional = true;
-    };
+    "tmux/tmux.conf".source = ./tmux/tmux.conf;
+    "zellij/config.kdl".source = ./zellij/config.kdl;
   };
 }

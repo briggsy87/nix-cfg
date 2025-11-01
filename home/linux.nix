@@ -21,10 +21,7 @@
   # Linux dotfiles
   xdg.configFile = {
     "alacritty/alacritty.toml".text = builtins.readFile ./alacritty.toml;
-    "tmux/tmux.conf" = {
-      source = ./tmux/tmux.conf;
-      optional = true;
-    };
+    "tmux/tmux.conf".source = ./tmux/tmux.conf;
   };
 
   # TODO: Add Hyprland/Wayland compositor config when ready
