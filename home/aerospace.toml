@@ -1,0 +1,100 @@
+# Aerospace minimal config
+
+
+# Workspaces 1–9
+"hyper-1" = "workspace 1"
+"hyper-2" = "workspace 2"
+"hyper-3" = "workspace 3"
+"hyper-4" = "workspace 4"
+"hyper-5" = "workspace 5"
+"hyper-6" = "workspace 6"
+"hyper-7" = "workspace 7"
+"hyper-8" = "workspace 8"
+"hyper-9" = "workspace 9"
+
+
+# Move window to workspace
+"hyper-shift-1" = "move-node-to-workspace 1"
+"hyper-shift-2" = "move-node-to-workspace 2"
+"hyper-shift-3" = "move-node-to-workspace 3"
+"hyper-shift-4" = "move-node-to-workspace 4"
+"hyper-shift-5" = "move-node-to-workspace 5"
+"hyper-shift-6" = "move-node-to-workspace 6"
+"hyper-shift-7" = "move-node-to-workspace 7"
+"hyper-shift-8" = "move-node-to-workspace 8"
+"hyper-shift-9" = "move-node-to-workspace 9"
+```toml
+# Aerospace minimal config
+start-at-login = true
+
+
+[gaps]
+inner = 8
+outer = 8
+
+
+[layout]
+default = "tiles"
+# also: "accordion", "floating"; toggle in keybinds
+
+
+[mode.main.binding]
+# Focus movement (vim keys)
+"hyper-h" = "focus left"
+"hyper-j" = "focus down"
+"hyper-k" = "focus up"
+"hyper-l" = "focus right"
+
+
+# Move window
+"hyper-shift-h" = "move left"
+"hyper-shift-j" = "move down"
+"hyper-shift-k" = "move up"
+"hyper-shift-l" = "move right"
+
+
+# Resize window
+"hyper-ctrl-h" = "resize width -50"
+"hyper-ctrl-l" = "resize width +50"
+"hyper-ctrl-j" = "resize height +50"
+"hyper-ctrl-k" = "resize height -50"
+
+
+# Float / tile toggle
+"hyper-t" = "toggle float"
+
+
+# Fullscreen
+"hyper-f" = "fullscreen"
+
+
+# Split orientation toggle (if supported) or cycle layout
+"hyper-space" = "layout next"
+
+
+# Launch terminal
+"hyper-enter" = "exec alacritty"
+
+
+# Workspaces 1–9
+"hyper-1" = "workspace 1"
+"hyper-2" = "workspace 2"
+"hyper-3" = "workspace 3"
+"hyper-4" = "workspace 4"
+"hyper-5" = "workspace 5"
+"hyper-6" = "workspace 6"
+"hyper-7" = "workspace 7"
+"hyper-8" = "workspace 8"
+"hyper-9" = "workspace 9"
+
+
+# Move window to workspace
+"hyper-shift-1" = "move-node-to-workspace 1"
+"hyper-shift-2" = "move-node-to-workspace 2"
+"hyper-shift-3" = "move-node-to-workspace 3"
+"hyper-shift-4" = "move-node-to-workspace 4"
+"hyper-shift-5" = "move-node-to-workspace 5"
+"hyper-shift-6" = "move-node-to-workspace 6"
+"hyper-shift-7" = "move-node-to-workspace 7"
+"hyper-shift-8" = "move-node-to-workspace 8"
+"hyper-shift-9" = "move-node-to-workspace 9"

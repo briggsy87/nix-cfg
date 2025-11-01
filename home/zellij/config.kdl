@@ -1,0 +1,22 @@
+layout "dev" {
+pane size=1 borderless=true {
+plugin location="zellij:tab-bar"
+}
+pane split_direction="vertical" {
+pane
+pane
+}
+}
+
+
+keybinds {
+normal {
+bind "Ctrl g" { SwitchToMode "locked" }
+bind "Ctrl s" { SwitchToMode "Session" }
+bind "Alt h" { MoveFocus "Left" }
+bind "Alt j" { MoveFocus "Down" }
+bind "Alt k" { MoveFocus "Up" }
+bind "Alt l" { MoveFocus "Right" }
+bind "Alt n" { NewPane }
+}
+}

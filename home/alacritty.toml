@@ -1,0 +1,36 @@
+[window]
+opacity = 1.0
+padding = { x = 8, y = 8 }
+
+
+environment = { TERM = "xterm-256color" }
+
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+size = 14.0
+
+
+[keyboard]
+bindings = [ { key = "Return", mods = "Command", action = "ToggleFullScreen" } ]
+```toml
+[window]
+opacity = 1.0
+padding = { x = 8, y = 8 }
+
+
+environment = { TERM = "xterm-256color" }
+
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+size = 14.0
+
+
+[keyboard]
+# Example: map Cmd+Enter to full screen inside Alacritty if you like
+bindings = [
+{ key = "Return", mods = "Command", action = "ToggleFullScreen" }
+]
