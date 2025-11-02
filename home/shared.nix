@@ -7,11 +7,9 @@
   # Cross-platform packages
   home.packages = with pkgs; [
     # AI assistants
-    # Note: Claude Code installation:
-    # 1. curl -fsSL https://anthropic.sh | sh
-    # 2. Restart your terminal (or run: exec zsh)
-    # 3. claude auth login
-    # (The installer adds ~/.local/bin to PATH, which home-manager handles)
+    # Note: Install Claude Code via: curl -fsSL https://anthropic.sh | sh
+    # Then authenticate with: claude auth login
+    # (Not available in nixpkgs yet, use installer script)
 
     # Terminal & editing
     ripgrep
@@ -75,6 +73,8 @@
 
     # Fonts
     #(nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    
+    claude-code
   ];
 
   # Shell configuration
@@ -86,9 +86,6 @@
       eval "$(zoxide init zsh)"
       eval "$(starship init zsh)"
       export EDITOR=nvim
-
-      # Ensure ~/.local/bin is in PATH for Claude Code
-      export PATH="$HOME/.local/bin:$PATH"
     '';
   };
 
@@ -151,16 +148,4 @@
 
   # Neovim config file (shared across platforms)
   xdg.configFile."nvim/init.lua".text = builtins.readFile ./nvim/init.lua;
-
-  # Additional shell configurations
-  programs.bash = {
-    enable = true;
-    initExtra = ''
-      # Source zsh if available and not already in zsh
-      if [ -z "$ZSH_VERSION" ] && command -v zsh &> /dev/null; then
-        export SHELL=$(command -v zsh)
-        exec zsh
-      fi
-    '';
-  };
 }
