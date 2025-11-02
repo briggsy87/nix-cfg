@@ -12,7 +12,6 @@
     # (Not available in nixpkgs yet, use installer script)
 
     # Terminal & editing
-    neovim
     ripgrep
     fd
     fzf
@@ -67,21 +66,21 @@
     terraform-ls
     bash-language-server
     yaml-language-server
-    dockerfile-language-server-nodejs
+    dockerfile-language-server
     lua-language-server
     stylua
     shfmt
 
     # Fonts
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    #(nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
   # Shell configuration
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    initExtra = ''
+    initContent = ''
       eval "$(zoxide init zsh)"
       eval "$(starship init zsh)"
       export EDITOR=nvim
@@ -128,13 +127,21 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "Your Name"; # ← CHANGE ME
-    userEmail = "you@example.com"; # ← CHANGE ME
-    delta.enable = true;
-    extraConfig = {
-      init.defaultBranch = "main";
-      pull.rebase = true;
-    };
+    settings = {
+	user.name = "Kyle Briggs";
+	user.email = "briggsy87@gmail.com";
+	init.defaultBranch = "main";
+        pull.rebase = true;
+	};
+    #delta.enable = true;
+    #extraConfig = {
+    #  init.defaultBranch = "main";
+    #  pull.rebase = true;
+    #};
+  };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
 
   # Neovim config file (shared across platforms)

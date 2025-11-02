@@ -16,6 +16,8 @@
     htop
     pciutils
     usbutils
+    
+    steam
   ];
 
   # Linux dotfiles

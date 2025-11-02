@@ -3,7 +3,7 @@
 {
   imports = [
     # Include the hardware scan results
-    /etc/nixos/hardware-configuration.nix
+    ./thinkpad-hardware.nix
   ];
 
   # Nix configuration
@@ -35,11 +35,17 @@
   time.timeZone = "America/Toronto";
   i18n.defaultLocale = "en_CA.UTF-8";
 
+  services.desktopManager = {
+    gnome.enable = true;
+  };
+  
+  services.displayManager = {
+    gdm.enable = true;
+  };
+
   # X11 / Desktop environment (matching your working config - GNOME)
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
 
     # Keyboard layout
     xkb = {
