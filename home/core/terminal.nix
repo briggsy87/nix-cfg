@@ -20,9 +20,16 @@
     glow          # Markdown renderer
     lazydocker    # Docker TUI
 
-    # Image preview support for ranger
+    # Image preview support for ranger/nnn
     chafa         # Image to ANSI art converter (best for Wayland terminals)
     ueberzugpp    # Image overlay for terminals (better quality)
+    imagemagick   # Image processing (needed by ranger for previews)
+    libsixel      # Sixel graphics support
+    file          # File type detection (needed for previews)
+    highlight     # Syntax highlighting for text previews
+
+    # Kitty terminal - has excellent image preview support
+    kitty
 
     # Crypto & secrets
     gnupg

@@ -168,6 +168,7 @@
         # Applications
         "$modifier, RETURN, exec, alacritty"
         "$modifier, T, exec, ghostty"
+        "$modifier SHIFT, RETURN, exec, kitty"
         "$modifier, B, exec, firefox"
         "$modifier, F, exec, thunar"
         "$modifier, SPACE, exec, rofi -show drun"

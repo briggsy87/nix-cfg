@@ -40,6 +40,7 @@
   xdg.configFile = {
     "alacritty/alacritty.toml".text = builtins.readFile ../alacritty.toml;
     "ghostty/config".text = builtins.readFile ../ghostty/config-linux;
+    "kitty/kitty.conf".text = builtins.readFile ../kitty.conf;
     "tmux/tmux.conf".source = ../tmux/tmux.conf;
     "ranger/rc.conf".text = builtins.readFile ../ranger/rc.conf;
   };
