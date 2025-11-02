@@ -51,9 +51,6 @@
         # Wallpaper daemon
         "killall -q swww-daemon; sleep .5 && swww-daemon"
 
-        # Status bar
-        "killall -q waybar; sleep .5 && waybar"
-
         # Network manager applet
         "nm-applet --indicator"
 
@@ -96,22 +93,26 @@
         force_split = 2;
       };
 
-      # Material Design 3 decorations
+      # Material Design 3 decorations with transparency
       decoration = {
         rounding = 8;
         blur = {
           enabled = true;
-          size = 5;
+          size = 6;
           passes = 3;
           ignore_opacity = false;
           new_optimizations = true;
+          xray = false;
         };
         shadow = {
           enabled = true;
-          range = 4;
+          range = 8;
           render_power = 3;
           color = "rgba(1a1a1aee)";
         };
+        # Opacity settings for inactive windows
+        inactive_opacity = 0.92;
+        active_opacity = 1.0;
       };
 
       # Material Design 3 animations (END-4 style)
@@ -166,7 +167,7 @@
       bind = [
         # Applications
         "$modifier, RETURN, exec, alacritty"
-        "$modifier, T, exec, alacritty"
+        "$modifier, T, exec, ghostty"
         "$modifier, B, exec, firefox"
         "$modifier, F, exec, thunar"
         "$modifier, SPACE, exec, rofi -show drun"
@@ -227,6 +228,7 @@
         # System
         "$modifier, L, exec, hyprlock"
         "$modifier SHIFT, E, exit"
+        "$modifier SHIFT, R, exec, hyprctl reload"
       ];
 
       # Mouse bindings
@@ -251,11 +253,14 @@
 
     # Extra configuration
     extraConfig = ''
-      # Monitor configuration
-      monitor=,preferred,auto,auto
+      # Monitor configuration - adjust scale to 1.25 or 1.5 if things are too large
+      # Format: monitor=name,resolution,position,scale
+      # Use 1.0 for normal, 1.25 for slightly smaller, 1.5 for much smaller
+      monitor=,preferred,auto,1.0
 
-      # Enable blur on waybar
+      # Enable blur on waybar and rofi for that glass effect
       layerrule = blur, waybar
+      layerrule = blur, rofi
     '';
   };
 

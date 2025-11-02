@@ -8,8 +8,8 @@
     settings = [{
       layer = "top";
       position = "top";
-      height = 40;
-      spacing = 8;
+      height = 32;
+      spacing = 6;
 
       modules-left = [
         "hyprland/workspaces"
@@ -116,13 +116,13 @@
     in ''
       * {
         font-family: ${config.stylix.fonts.monospace.name}, monospace;
-        font-size: 13px;
+        font-size: 11px;
         font-weight: bold;
         min-height: 0;
       }
 
       window#waybar {
-        background: alpha(#${colors.base00}, 0.9);
+        background: alpha(#${colors.base00}, 0.7);
         color: #${colors.base05};
         border-radius: 0;
       }
@@ -168,7 +168,7 @@
       #tray {
         padding: 0 12px;
         margin: 4px 4px;
-        background: alpha(#${colors.base01}, 0.6);
+        background: alpha(#${colors.base01}, 0.4);
         border-radius: 8px;
         color: #${colors.base05};
       }

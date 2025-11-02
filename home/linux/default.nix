@@ -10,8 +10,9 @@
 
   # Linux-specific packages
   home.packages = with pkgs; [
-    # Terminal
+    # Terminals
     alacritty
+    ghostty
 
     # Terminal multiplexer
     tmux
@@ -38,6 +39,7 @@
   # Linux dotfiles
   xdg.configFile = {
     "alacritty/alacritty.toml".text = builtins.readFile ../alacritty.toml;
+    "ghostty/config".text = builtins.readFile ../ghostty/config-linux;
     "tmux/tmux.conf".source = ../tmux/tmux.conf;
   };
 }

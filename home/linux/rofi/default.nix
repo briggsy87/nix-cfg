@@ -22,8 +22,8 @@
       colors = config.lib.stylix.colors;
     in {
       "*" = {
-        bg = mkLiteral "#${colors.base00}";
-        bg-alt = mkLiteral "#${colors.base01}";
+        bg = mkLiteral "#${colors.base00}cc";
+        bg-alt = mkLiteral "#${colors.base01}dd";
         foreground = mkLiteral "#${colors.base05}";
         selected = mkLiteral "#${colors.base08}";
         active = mkLiteral "#${colors.base0B}";
