@@ -12,9 +12,9 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "Kyle Briggs";
-    userEmail = "briggsy87@gmail.com";
-    extraConfig = {
+    settings = {
+      user.name = "Kyle Briggs";
+      user.email = "briggsy87@gmail.com";
       init.defaultBranch = "main";
       pull.rebase = true;
     };
@@ -23,6 +23,7 @@
   # Delta - syntax-highlighted git diffs (themed by Stylix)
   programs.delta = {
     enable = true;
+    enableGitIntegration = true;
     options = {
       navigate = true;
       light = false;
@@ -30,7 +31,4 @@
       line-numbers = true;
     };
   };
-
-  # Integrate delta with git
-  programs.git.delta.enable = true;
 }

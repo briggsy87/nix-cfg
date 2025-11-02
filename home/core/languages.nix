@@ -19,7 +19,7 @@
     terraform-ls
     bash-language-server
     yaml-language-server
-    dockerfile-language-server-nodejs
+    dockerfile-language-server
     lua-language-server
     stylua
     shfmt

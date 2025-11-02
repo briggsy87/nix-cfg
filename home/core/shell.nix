@@ -14,7 +14,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    initExtra = ''
+    initContent = ''
       # Zoxide for smart directory jumping
       eval "$(zoxide init zsh)"
 

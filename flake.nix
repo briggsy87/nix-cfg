@@ -15,7 +15,6 @@
     # System-wide theming
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
-    stylix.inputs.home-manager.follows = "home-manager";
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, stylix, ... }:
@@ -46,6 +45,9 @@
           homeConfig = { ... }: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              stylix.homeModules.stylix
+            ];
             home-manager.users.${username} = import ./home {
               inherit platform;
             };

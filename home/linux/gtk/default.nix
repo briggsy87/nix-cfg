@@ -19,12 +19,8 @@
     };
   };
 
-  # Qt configuration
-  qt = {
-    enable = true;
-    platformTheme.name = "gtk3";
-    style.name = "adwaita-dark";
-  };
+  # Qt configuration - let Stylix handle theming
+  # Stylix will automatically configure Qt to match your color scheme
 
   # Additional theming packages
   home.packages = with pkgs; [
@@ -32,20 +28,10 @@
     adwaita-icon-theme
     papirus-icon-theme
 
-    # Cursor theme (from Stylix)
-    bibata-cursors
-
     # QT integration
     libsForQt5.qt5ct
     qt6Packages.qt6ct
   ];
 
-  # Home cursor theme
-  home.pointerCursor = {
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
-    size = 24;
-    gtk.enable = true;
-    x11.enable = true;
-  };
+  # Cursor theme is configured by Stylix in home/theme/default.nix
 }
