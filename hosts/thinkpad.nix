@@ -96,6 +96,16 @@
   # Enable docker
   virtualisation.docker.enable = true;
 
+  # Enable Steam
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports for Source Dedicated Server
+  };
+
+  # Enable 32-bit libraries for Steam and gaming
+  hardware.graphics.enable32Bit = true;
+
   # Enable zsh system-wide
   programs.zsh.enable = true;
 

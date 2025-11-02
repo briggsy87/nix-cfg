@@ -16,7 +16,11 @@
     htop
     pciutils
     usbutils
-    
+
+    # Development
+    vscode
+
+    # Gaming
     steam
   ];
 
