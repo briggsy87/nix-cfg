@@ -11,9 +11,14 @@
     # User environment management
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # System-wide theming
+    stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.inputs.home-manager.follows = "home-manager";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, stylix, ... }:
     let
       # Host configurations - add new hosts here
       hosts = {
@@ -54,6 +59,7 @@
               modules = [
                 ./hosts/${hostname}.nix
                 home-manager.darwinModules.home-manager
+                stylix.darwinModules.stylix
                 homeConfig
               ];
             };
@@ -65,6 +71,7 @@
               modules = [
                 ./hosts/${hostname}.nix
                 home-manager.nixosModules.home-manager
+                stylix.nixosModules.stylix
                 homeConfig
               ];
             };

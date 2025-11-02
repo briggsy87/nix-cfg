@@ -7,8 +7,14 @@ let
 in
 {
   imports = [
-    ./shared.nix
-    (if isDarwin then ./darwin.nix else ./linux.nix)
+    # Theme system (cross-platform)
+    ./theme
+
+    # Core modules (cross-platform)
+    ./core
+
+    # Platform-specific modules
+    (if isDarwin then ./darwin else ./linux)
   ];
 
   home.stateVersion = "24.05";
