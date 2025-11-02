@@ -12,6 +12,9 @@
     cliphist          # Clipboard history
     hyprpolkitagent   # Polkit agent for Hyprland
 
+    # Notifications
+    libnotify         # Send notifications (notify-send command)
+
     # System utilities
     pavucontrol       # Audio control
     brightnessctl     # Brightness control
@@ -53,6 +56,9 @@
 
         # Network manager applet
         "nm-applet --indicator"
+
+        # Bluetooth manager applet
+        "blueman-applet"
 
         # Set wallpaper (uses Stylix wallpaper)
         "sleep 1.5 && swww img $HOME/.current-wallpaper"
@@ -229,7 +235,7 @@
         # System
         "$modifier, L, exec, hyprlock"
         "$modifier SHIFT, E, exit"
-        "$modifier SHIFT, R, exec, hyprctl reload"
+        "$modifier SHIFT, R, exec, hyprctl reload && notify-send 'Hyprland' 'Configuration reloaded' --icon=dialog-information"
       ];
 
       # Mouse bindings

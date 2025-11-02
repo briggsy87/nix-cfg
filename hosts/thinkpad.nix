@@ -76,7 +76,22 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # Enable bluetooth audio support
+    wireplumber.enable = true;
   };
+
+  # Enable Bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true;
+      };
+    };
+  };
+  services.blueman.enable = true;
 
   # User account
   users.users.${username} = {

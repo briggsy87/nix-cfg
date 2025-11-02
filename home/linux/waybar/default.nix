@@ -22,6 +22,7 @@
 
       modules-right = [
         "pulseaudio"
+        "bluetooth"
         "network"
         "cpu"
         "memory"
@@ -65,6 +66,19 @@
           default = [ "" "" "" ];
         };
         on-click = "pavucontrol";
+      };
+
+      # Bluetooth
+      "bluetooth" = {
+        format = "";
+        format-disabled = "";
+        format-connected = " {num_connections}";
+        format-connected-battery = " {device_battery_percentage}%";
+        tooltip-format = "{controller_alias}\t{controller_address}";
+        tooltip-format-connected = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
+        tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
+        tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
+        on-click = "blueman-manager";
       };
 
       # Network
@@ -165,6 +179,7 @@
       #memory,
       #network,
       #pulseaudio,
+      #bluetooth,
       #tray {
         padding: 0 12px;
         margin: 4px 4px;
@@ -187,6 +202,14 @@
 
       #pulseaudio.muted {
         color: #${colors.base03};
+      }
+
+      #bluetooth.disabled {
+        color: #${colors.base03};
+      }
+
+      #bluetooth.connected {
+        color: #${colors.base0D};
       }
 
       #network.disconnected {

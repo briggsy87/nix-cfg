@@ -6,6 +6,7 @@
     ./waybar
     ./rofi
     ./gtk
+    ./mako
   ];
 
   # Linux-specific packages
