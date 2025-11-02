@@ -4,7 +4,7 @@ window-padding-x = 8
 window-padding-y = 8
 cursor-style = block
 shell-integration = zsh
-selection-copy-to-clipboard = true
+copy-on-select = true
 
 # Transparency for that sleek look
 background-opacity = 0.85

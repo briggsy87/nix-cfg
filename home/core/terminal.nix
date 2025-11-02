@@ -20,6 +20,10 @@
     glow          # Markdown renderer
     lazydocker    # Docker TUI
 
+    # Image preview support for ranger
+    chafa         # Image to ANSI art converter (best for Wayland terminals)
+    ueberzugpp    # Image overlay for terminals (better quality)
+
     # Crypto & secrets
     gnupg
     age
