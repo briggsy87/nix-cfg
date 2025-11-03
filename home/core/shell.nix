@@ -15,6 +15,9 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     initContent = ''
+      # Add local bin to PATH for user scripts
+      export PATH="$HOME/.local/bin:$PATH"
+
       # Zoxide for smart directory jumping
       eval "$(zoxide init zsh)"
 

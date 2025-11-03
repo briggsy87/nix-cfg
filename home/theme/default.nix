@@ -67,6 +67,7 @@ in
       waybar.enable = false;
       rofi.enable = false;
       hyprland.enable = false;
+      hyprlock.enable = false;  # Manual hyprlock config with custom styling
       mako.enable = false;  # Manual mako config with transparency
       gtk.enable = isLinux;
       qt.enable = isLinux;

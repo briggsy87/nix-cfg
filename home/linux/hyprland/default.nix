@@ -239,7 +239,7 @@
 
         # System & Power
         "$modifier, L, exec, hyprlock"
-        "$modifier, Escape, exec, power-menu"
+        "$modifier, Escape, exec, $HOME/.local/bin/power-menu"
         "$modifier SHIFT, Delete, exec, systemctl suspend"
         "$modifier SHIFT, E, exit"
         "$modifier SHIFT, R, exec, hyprctl reload && systemctl --user restart waybar && swww img $HOME/.current-wallpaper && notify-send 'Hyprland' 'Configuration reloaded' --icon=dialog-information"
