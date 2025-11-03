@@ -4,6 +4,11 @@
 let
   isDarwin = platform == "darwin";
   isLinux = platform == "nixos";
+
+  # Construct home directory path as a proper string
+  homeDir = if isDarwin
+    then "/Users/" + username
+    else "/home/" + username;
 in
 {
   imports = [
@@ -18,8 +23,8 @@ in
   ];
 
   # Set home-manager user info
-  home.username = username;
-  home.homeDirectory = if isDarwin then "/Users/${username}" else "/home/${username}";
+  home.username = lib.mkDefault username;
+  home.homeDirectory = lib.mkDefault homeDir;
 
   home.stateVersion = "24.05";
 }
