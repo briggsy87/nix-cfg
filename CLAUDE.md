@@ -96,7 +96,10 @@ Neovim is configured purely through Nix:
 
 **macOS:**
 ```bash
-# First time setup
+# First time setup (requires experimental features enabled)
+# If nix-command/flakes not enabled, run:
+# mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
 nix run nix-darwin -- switch --flake .#m4pro
 
 # Subsequent updates

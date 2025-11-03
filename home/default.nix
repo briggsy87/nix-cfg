@@ -1,4 +1,4 @@
-{ platform }:
+{ platform, username }:
 { config, pkgs, lib, ... }:
 
 let
@@ -16,6 +16,10 @@ in
     # Platform-specific modules
     (if isDarwin then ./darwin else ./linux)
   ];
+
+  # Set home-manager user info
+  home.username = username;
+  home.homeDirectory = if isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.stateVersion = "24.05";
 }

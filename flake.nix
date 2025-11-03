@@ -49,7 +49,7 @@
               stylix.homeModules.stylix
             ];
             home-manager.users.${username} = import ./home {
-              inherit platform;
+              inherit platform username;
             };
           };
         in

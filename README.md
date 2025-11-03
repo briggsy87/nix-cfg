@@ -96,6 +96,12 @@ nix-shell -p git
 
 First-time setup:
 ```bash
+# Enable experimental features if not already enabled
+mkdir -p ~/.config/nix
+cat > ~/.config/nix/nix.conf <<EOF
+experimental-features = nix-command flakes
+EOF
+
 # Install nix-darwin
 nix run nix-darwin -- switch --flake ~/nix-config#m4pro
 
