@@ -11,15 +11,20 @@
     swappy            # Screenshot editor
     cliphist          # Clipboard history
     hyprpolkitagent   # Polkit agent for Hyprland
+    hyprlock          # Screen locker for Hyprland
+    hypridle          # Idle daemon for auto-lock
 
     # Notifications
     libnotify         # Send notifications (notify-send command)
 
     # System utilities
-    pavucontrol       # Audio control
+    pavucontrol       # Audio control GUI
+    pulseaudio        # Provides pactl for waybar pulseaudio module
+    wireplumber       # PipeWire session manager
     brightnessctl     # Brightness control
     playerctl         # Media player control
     networkmanagerapplet  # Network manager tray
+    bluez             # Bluetooth utilities for waybar
 
     # File manager
     xfce.thunar       # GUI file manager
@@ -230,12 +235,14 @@
 
         # Screenshots
         ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
-        "$modifier SHIFT, S, exec, grim -g \"$(slurp)\" - | swappy -f -"
+        "$modifier SHIFT, Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
 
-        # System
+        # System & Power
         "$modifier, L, exec, hyprlock"
+        "$modifier, Escape, exec, power-menu"
+        "$modifier SHIFT, Delete, exec, systemctl suspend"
         "$modifier SHIFT, E, exit"
-        "$modifier SHIFT, R, exec, hyprctl reload && notify-send 'Hyprland' 'Configuration reloaded' --icon=dialog-information"
+        "$modifier SHIFT, R, exec, hyprctl reload && systemctl --user restart waybar && swww img $HOME/.current-wallpaper && notify-send 'Hyprland' 'Configuration reloaded' --icon=dialog-information"
       ];
 
       # Mouse bindings

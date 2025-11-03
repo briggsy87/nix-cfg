@@ -147,6 +147,9 @@
   # Enable polkit (required for Hyprland)
   security.polkit.enable = true;
 
+  # Allow wheel group to use sudo without password
+  security.sudo.wheelNeedsPassword = false;
+
   # Fonts
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono

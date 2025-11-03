@@ -7,6 +7,7 @@
     ./rofi
     ./gtk
     ./mako
+    ./hyprlock
   ];
 
   # Linux-specific packages
@@ -44,5 +45,11 @@
     "kitty/kitty.conf".text = builtins.readFile ../kitty.conf;
     "tmux/tmux.conf".source = ../tmux/tmux.conf;
     "ranger/rc.conf".text = builtins.readFile ../ranger/rc.conf;
+  };
+
+  # Install power menu script
+  home.file.".local/bin/power-menu" = {
+    source = ./scripts/power-menu.sh;
+    executable = true;
   };
 }

@@ -63,10 +63,11 @@ in
       alacritty.enable = isDarwin;
       kitty.enable = true;
 
-      # Linux-specific - we'll manually theme these for more control
+      # Linux-specific - we'll manually theme these for more control (with transparency)
       waybar.enable = false;
       rofi.enable = false;
       hyprland.enable = false;
+      mako.enable = false;  # Manual mako config with transparency
       gtk.enable = isLinux;
       qt.enable = isLinux;
     } // lib.optionalAttrs isDarwin {

@@ -5,6 +5,9 @@
     enable = true;
     systemd.enable = true;
 
+    # Use default waybar package (pulseaudio support is built-in by default)
+    package = pkgs.waybar;
+
     settings = [{
       layer = "top";
       position = "top";
@@ -136,7 +139,7 @@
       }
 
       window#waybar {
-        background: alpha(#${colors.base00}, 0.7);
+        background: alpha(#${colors.base00}, 0.2);
         color: #${colors.base05};
         border-radius: 0;
       }
