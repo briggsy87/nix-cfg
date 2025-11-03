@@ -40,7 +40,7 @@
     kubectl
     kubectx
     k9s
-    helm
+    #helm
     stern
   ];
 

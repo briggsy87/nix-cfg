@@ -8,7 +8,7 @@
     karabiner-elements
 
     # Terminals
-    ghostty
+    #ghostty
     alacritty
 
     # Terminal multiplexers

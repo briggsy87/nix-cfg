@@ -7,13 +7,17 @@
       "nix-command"
       "flakes"
     ];
-    auto-optimise-store = true;
     warn-dirty = false;
   };
 
+  nix.optimise.automatic = true;
+
+  users.users.${username} = {
+    home = "/Users/${username}";
+  };
 
   # TouchID for sudo
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # System defaults to reduce friction
   system.defaults = {
@@ -48,4 +52,10 @@
   # System hostname
   networking.hostName = hostname;
   networking.computerName = hostname;
+
+  system.stateVersion = 6;
+  system.primaryUser = username;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 }

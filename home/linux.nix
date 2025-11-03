@@ -22,6 +22,11 @@
 
     # Gaming
     steam
+
+    #x86 only
+    helm
+    gitui
+    ghostty
   ];
 
   # Linux dotfiles

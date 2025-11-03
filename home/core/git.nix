@@ -5,7 +5,7 @@
     git
     git-lfs
     lazygit
-    gitui
+    #gitui
     delta
   ];
 

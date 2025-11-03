@@ -46,7 +46,6 @@
     kubectl
     kubectx
     k9s
-    helm
     stern
 
     # Languages / tooling
