@@ -100,8 +100,7 @@
       plenary-nvim
       telescope-nvim
       nvim-treesitter
-      nvim-lspconfig
-      null-ls-nvim
+      none-ls-nvim
       nvim-cmp
       cmp-nvim-lsp
       cmp-buffer
@@ -112,6 +111,13 @@
       lazygit-nvim
       oil-nvim # minimal file manager in-buffer
       which-key-nvim
+
+      # Colorschemes (dark/purple themes)
+      dracula-nvim          # Active: Classic purple/pink theme
+      tokyonight-nvim       # Alternative: Dark theme with purple accents
+      catppuccin-nvim       # Alternative: Mocha variant has purple tones
+      nightfox-nvim         # Alternative: Carbonfox has purple highlights
+      kanagawa-nvim         # Alternative: Dark theme with subtle purple
     ];
     extraLuaConfig = builtins.readFile ./nvim/init.lua;
   };
@@ -123,6 +129,25 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+  };
+
+  # SSH configuration
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      "work" = {
+        host = "w.github.com-w";
+        hostname = "github.com";
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+      };
+      "personal" = {
+        host = "p.github.com";
+        hostname = "github.com";
+        identityFile = "~/.ssh/personal_git";
+        identitiesOnly = true;
+      };
+    };
   };
 
   # Git configuration
@@ -144,7 +169,4 @@
     enable = true;
     enableGitIntegration = true;
   };
-
-  # Neovim config file (shared across platforms)
-  xdg.configFile."nvim/init.lua".text = builtins.readFile ./nvim/init.lua;
 }

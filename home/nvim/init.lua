@@ -1,5 +1,48 @@
--- Leader
+-- Leader key
+vim.g.mapleader = ' '
 
+-- Basic editor settings
+vim.opt.number = true         -- Show line numbers
+vim.opt.relativenumber = true -- Relative line numbers
+vim.opt.expandtab = true      -- Use spaces instead of tabs
+vim.opt.shiftwidth = 2        -- Size of indent
+vim.opt.tabstop = 2           -- Number of spaces tabs count for
+vim.opt.smartindent = true    -- Insert indents automatically
+vim.opt.wrap = false          -- Disable line wrap
+vim.opt.termguicolors = true  -- True color support
+
+-- Colorscheme (Dark/Purple themes)
+vim.cmd('colorscheme dracula')
+
+-- Enable transparency to match terminal
+vim.api.nvim_create_autocmd('ColorScheme', {
+  pattern = '*',
+  callback = function()
+    -- Make background transparent
+    vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'none' })
+
+    -- Make line numbers transparent
+    vim.api.nvim_set_hl(0, 'LineNr', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'Folded', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'NonText', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'SpecialKey', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'VertSplit', { bg = 'none' })
+    vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
+  end,
+})
+
+-- Apply transparency immediately
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+
+-- Alternative colorschemes (uncomment to try):
+-- vim.cmd('colorscheme tokyonight-moon')      -- Purple variant of TokyoNight
+-- vim.cmd('colorscheme catppuccin-mocha')     -- Catppuccin Mocha (purple tones)
+-- vim.cmd('colorscheme carbonfox')            -- Nightfox variant with purple
+-- vim.cmd('colorscheme kanagawa')             -- Dark theme with subtle purple
 
 -- Simple key helpers
 local map = vim.keymap.set
@@ -14,40 +57,64 @@ map('n', '<leader>fh', require('telescope.builtin').help_tags, {desc='Help'})
 
 -- Treesitter
 require('nvim-treesitter.configs').setup{
-ensure_installed = { 'lua', 'python', 'javascript', 'typescript', 'tsx', 'json', 'yaml', 'terraform', 'markdown', 'bash' },
+-- Don't auto-install parsers (managed by Nix)
+auto_install = false,
+-- Use a writable directory for compiled parsers
+parser_install_dir = vim.fn.stdpath('data') .. '/treesitter',
 highlight = { enable = true },
 indent = { enable = true }
 }
 
+-- Add parser directory to runtimepath
+vim.opt.runtimepath:append(vim.fn.stdpath('data') .. '/treesitter')
+
 
 -- LSP (use system servers installed via Nix)
-local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+-- LSP keybindings (set up on LspAttach event)
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local bufnr = args.buf
+    local buf = function(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+    end
+    buf('n', 'gd', vim.lsp.buf.definition, 'Go to definition')
+    buf('n', 'gr', vim.lsp.buf.references, 'Go to references')
+    buf('n', 'K', vim.lsp.buf.hover, 'Hover documentation')
+    buf('n', '<leader>rn', vim.lsp.buf.rename, 'Rename')
+    buf('n', '<leader>ca', vim.lsp.buf.code_action, 'Code action')
+    buf('n', '[d', vim.diagnostic.goto_prev, 'Previous diagnostic')
+    buf('n', ']d', vim.diagnostic.goto_next, 'Next diagnostic')
+    buf('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end, 'Format')
+  end,
+})
 
-local on_attach = function(_, bufnr)
-local buf = function(mode, lhs, rhs) map(mode, lhs, rhs, { buffer = bufnr }) end
-buf('n', 'gd', vim.lsp.buf.definition)
-buf('n', 'gr', vim.lsp.buf.references)
-buf('n', 'K', vim.lsp.buf.hover)
-buf('n', '<leader>rn', vim.lsp.buf.rename)
-buf('n', '<leader>ca', vim.lsp.buf.code_action)
-buf('n', '[d', vim.diagnostic.goto_prev)
-buf('n', ']d', vim.diagnostic.goto_next)
-buf('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end)
+-- Configure LSP servers using new Neovim 0.11+ API
+local servers = {
+  pyright = { filetypes = { 'python' } },
+  ts_ls = { filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' } },
+  terraformls = { filetypes = { 'terraform', 'tf' } },
+  jsonls = { filetypes = { 'json' } },
+  yamlls = { filetypes = { 'yaml' } },
+  bashls = { filetypes = { 'sh', 'bash' } },
+  dockerls = { filetypes = { 'dockerfile' } },
+}
+
+for server, config in pairs(servers) do
+  vim.lsp.config[server] = {
+    cmd = { server },
+    filetypes = config.filetypes,
+    root_dir = vim.fs.root(0, { '.git', '.gitignore' }),
+    capabilities = capabilities,
+  }
 end
 
-
-lspconfig.pyright.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.tsserver.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.terraformls.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.jsonls.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.yamlls.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.bashls.setup{ capabilities = capabilities, on_attach = on_attach }
-lspconfig.dockerls.setup{ capabilities = capabilities, on_attach = on_attach }
+-- Enable LSP servers
+vim.lsp.enable(vim.tbl_keys(servers))
 
 
--- null-ls (formatting & linting via external tools)
+-- none-ls (formatting & linting via external tools)
 local null_ls = require('null-ls')
 null_ls.setup({
 sources = {
@@ -60,7 +127,6 @@ null_ls.builtins.formatting.stylua,
 null_ls.builtins.diagnostics.ruff,
 -- add eslint_d if desired
 },
-on_attach = on_attach,
 })
 
 

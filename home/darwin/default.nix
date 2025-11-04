@@ -21,11 +21,29 @@
 
   # macOS dotfiles
   xdg.configFile = {
-    "aerospace/aerospace.toml".text = builtins.readFile ../aerospace.toml;
-    "karabiner/karabiner.json".text = builtins.readFile ../karabiner.json;
-    "ghostty/config".text = builtins.readFile ../ghostty/config;
-    "alacritty/alacritty.toml".text = builtins.readFile ../alacritty.toml;
-    "tmux/tmux.conf".source = ../tmux/tmux.conf;
-    "zellij/config.kdl".source = ../zellij/config.kdl;
+    "aerospace/aerospace.toml" = {
+      text = builtins.readFile ../aerospace.toml;
+      force = true;  # Allow overwriting existing file
+    };
+    "karabiner/karabiner.json" = {
+      text = builtins.readFile ../karabiner.json;
+      force = true;
+    };
+    "ghostty/config" = {
+      text = builtins.readFile ../ghostty/config;
+      force = true;
+    };
+    "alacritty/alacritty.toml" = {
+      text = builtins.readFile ../alacritty.toml;
+      force = true;
+    };
+    "tmux/tmux.conf" = {
+      source = ../tmux/tmux.conf;
+      force = true;
+    };
+    "zellij/config.kdl" = {
+      source = ../zellij/config.kdl;
+      force = true;
+    };
   };
 }

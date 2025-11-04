@@ -88,7 +88,16 @@ Neovim is configured purely through Nix:
 - LSP servers, formatters, linters installed as Nix packages
 - Configuration in `home/nvim/init.lua` uses system-installed LSPs
 - **No Mason, no separate package manager** - everything through Nix
-- Stack: Telescope + Treesitter + LSP + nvim-cmp + null-ls + oil.nvim + gitsigns
+- **Uses Neovim 0.11+ native LSP API** (no nvim-lspconfig dependency)
+- Stack: Telescope + Treesitter + Native LSP + nvim-cmp + none-ls + oil.nvim + gitsigns
+- **Transparency enabled** to match terminal (Ghostty 50% opacity)
+- **Dracula theme** active with alternative purple/dark themes available
+
+**📖 See `docs/vim.md` for comprehensive Neovim documentation including:**
+- Complete keybindings reference
+- Plugin usage guides
+- LSP configuration details
+- Workflows and tips
 
 ## Common Commands
 

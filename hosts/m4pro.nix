@@ -1,11 +1,6 @@
 { config, pkgs, lib, hostname, username, ... }:
 
 {
-  # System-level packages (alternative to home-manager for GUI apps)
-  environment.systemPackages = with pkgs; [
-    #ghostty
-    #gitui
-  ];
 
   # Nix features
   nix.settings = {
@@ -68,7 +63,10 @@
 
     # Casks for GUI apps not available or broken in nixpkgs
     casks = [
-      #"ghostty" # Not available for darwin in nixpkgs
+      "ghostty"   # Terminal - not available for darwin in nixpkgs
+      "raycast"   # Launcher - better than Spotlight for finding Nix apps
+      "arc"       # Browser - workspace 1
+      "cursor"    # AI IDE - workspace 4
     ];
 
     # Brews (CLI tools) - prefer nixpkgs when possible

@@ -12,7 +12,9 @@
   ];
 
   # Neomutt configuration
-  xdg.configFile."neomutt/neomuttrc".text = ''
+  xdg.configFile."neomutt/neomuttrc" = {
+    force = true;
+    text = ''
     # Load account-specific settings from external secrets file
     # This file is NOT tracked in git and should be created manually
     source ~/.config/neomutt/accounts.secret
@@ -71,16 +73,21 @@
     # Printing
     set print_command = "lpr"
   '';
+  };
 
   # Mailcap for viewing HTML emails
-  xdg.configFile."neomutt/mailcap".text = ''
+  xdg.configFile."neomutt/mailcap" = {
+    force = true;
+    text = ''
     text/html; w3m -I %{charset} -T text/html; copiousoutput;
     text/html; lynx -assume_charset=%{charset} -display_charset=utf-8 -dump -width=1024 %s; nametemplate=%s.html; copiousoutput
   '';
+  };
 
   # OAuth2 helper script for Gmail
   xdg.configFile."neomutt/mutt_oauth2.py" = {
     source = ./mutt_oauth2.py;
     executable = true;
+    force = true;
   };
 }
