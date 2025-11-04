@@ -91,7 +91,7 @@ Neovim is configured purely through Nix:
 - **Uses Neovim 0.11+ native LSP API** (no nvim-lspconfig dependency)
 - Stack: Telescope + Treesitter + Native LSP + nvim-cmp + none-ls + oil.nvim + gitsigns
 - **Transparency enabled** to match terminal (Ghostty 50% opacity)
-- **Dracula theme** active with alternative purple/dark themes available
+- **TokyoNight Moon theme** active with fallback chain and alternative purple/dark themes available
 
 **📖 See `docs/vim.md` for comprehensive Neovim documentation including:**
 - Complete keybindings reference

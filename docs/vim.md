@@ -69,20 +69,26 @@ Configured in `home/nvim/init.lua:4-12`:
 ## Colorschemes & Theming
 
 ### Active Theme
-**Dracula** - Classic dark theme with purple/pink accents
+**TokyoNight Moon** - Dark theme with purple accents and transparency support
 
 ### Transparency
 Neovim is configured to respect terminal transparency (50% opacity from Ghostty config).
 All backgrounds are set to `none` so the terminal background shows through.
 
-### Alternative Themes
+The colorscheme loader automatically tries themes in this order:
+1. TokyoNight Moon (purple accents)
+2. Catppuccin Mocha (purple tones)
+3. Kanagawa (subtle purple)
+4. Carbonfox (purple highlights)
+5. Habamax (built-in fallback)
 
-Uncomment one of these lines in `home/nvim/init.lua:42-45` to switch themes:
+### Switching Themes
+
+Uncomment one of these lines in `home/nvim/init.lua:66-70` to override the default:
 
 ```lua
 -- Purple/Dark theme options:
-vim.cmd('colorscheme dracula')              -- Active (purple/pink)
--- vim.cmd('colorscheme tokyonight-moon')   -- Dark with purple accents
+-- vim.cmd('colorscheme tokyonight-moon')   -- Active default (purple accents)
 -- vim.cmd('colorscheme catppuccin-mocha')  -- Purple-toned variant
 -- vim.cmd('colorscheme carbonfox')         -- Dark with purple highlights
 -- vim.cmd('colorscheme kanagawa')          -- Subtle purple/dark theme
@@ -95,12 +101,11 @@ darwin-rebuild switch --flake .#m4pro
 
 ### Available Colorscheme Plugins
 
-Installed in `home/shared.nix:115-120`:
+Installed in `home/shared.nix:116-119`:
 
-- **dracula-nvim** - Classic Dracula theme (purple/pink)
-- **tokyonight-nvim** - Tokyo Night (multiple variants including purple)
-- **catppuccin-nvim** - Catppuccin (Mocha variant has purple tones)
-- **nightfox-nvim** - Nightfox family (Carbonfox is dark with purple)
+- **tokyonight-nvim** - Tokyo Night Moon variant (purple accents) - **Active**
+- **catppuccin-nvim** - Catppuccin Mocha variant (purple tones)
+- **nightfox-nvim** - Nightfox family (Carbonfox has purple highlights)
 - **kanagawa-nvim** - Japanese-inspired dark theme with subtle purple
 
 ---

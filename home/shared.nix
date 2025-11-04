@@ -113,8 +113,7 @@
       which-key-nvim
 
       # Colorschemes (dark/purple themes)
-      dracula-nvim          # Active: Classic purple/pink theme
-      tokyonight-nvim       # Alternative: Dark theme with purple accents
+      tokyonight-nvim       # Active: Dark theme with purple accents (moon variant)
       catppuccin-nvim       # Alternative: Mocha variant has purple tones
       nightfox-nvim         # Alternative: Carbonfox has purple highlights
       kanagawa-nvim         # Alternative: Dark theme with subtle purple

@@ -11,8 +11,33 @@ vim.opt.smartindent = true    -- Insert indents automatically
 vim.opt.wrap = false          -- Disable line wrap
 vim.opt.termguicolors = true  -- True color support
 
--- Colorscheme (Dark/Purple themes)
-vim.cmd('colorscheme dracula')
+-- Colorscheme setup (Dark/Purple themes)
+-- Some themes need setup() called before loading
+pcall(function()
+  require('tokyonight').setup({ style = 'moon', transparent = true })
+end)
+
+pcall(function()
+  require('catppuccin').setup({ flavour = 'mocha', transparent_background = true })
+end)
+
+-- Try to load preferred colorscheme with fallbacks
+local function try_colorscheme(name)
+  local ok, _ = pcall(vim.cmd, 'colorscheme ' .. name)
+  return ok
+end
+
+-- Try colorschemes in order of preference (dark/purple themes)
+if not try_colorscheme('tokyonight-moon') then
+  if not try_colorscheme('catppuccin-mocha') then
+    if not try_colorscheme('kanagawa') then
+      if not try_colorscheme('carbonfox') then
+        -- Fallback to built-in dark theme
+        vim.cmd('colorscheme habamax')
+      end
+    end
+  end
+end
 
 -- Enable transparency to match terminal
 vim.api.nvim_create_autocmd('ColorScheme', {
@@ -38,8 +63,8 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
 
--- Alternative colorschemes (uncomment to try):
--- vim.cmd('colorscheme tokyonight-moon')      -- Purple variant of TokyoNight
+-- Alternative colorschemes - uncomment ONE of these to override:
+-- vim.cmd('colorscheme tokyonight-moon')      -- Dark with purple accents (default if available)
 -- vim.cmd('colorscheme catppuccin-mocha')     -- Catppuccin Mocha (purple tones)
 -- vim.cmd('colorscheme carbonfox')            -- Nightfox variant with purple
 -- vim.cmd('colorscheme kanagawa')             -- Dark theme with subtle purple
