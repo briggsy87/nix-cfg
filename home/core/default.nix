@@ -7,6 +7,7 @@
     ./terminal.nix
     ./languages.nix
     ./neovim.nix
+    ./email.nix
   ];
 
   # Enable font management

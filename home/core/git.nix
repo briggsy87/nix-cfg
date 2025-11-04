@@ -5,7 +5,7 @@
     git
     git-lfs
     lazygit
-    #gitui
+    # gitui - fails to build on aarch64-darwin (assembly code issue)
     delta
   ];
 
