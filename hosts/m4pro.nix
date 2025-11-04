@@ -2,11 +2,10 @@
 
 {
   # System-level packages (alternative to home-manager for GUI apps)
-  # Uncomment to test if GUI apps work better at system level vs home-manager
-  # environment.systemPackages = with pkgs; [
-  #   ghostty
-  #   gitui
-  # ];
+  environment.systemPackages = with pkgs; [
+    #ghostty
+    #gitui
+  ];
 
   # Nix features
   nix.settings = {
@@ -69,7 +68,7 @@
 
     # Casks for GUI apps not available or broken in nixpkgs
     casks = [
-      "ghostty" # Not available for darwin in nixpkgs
+      #"ghostty" # Not available for darwin in nixpkgs
     ];
 
     # Brews (CLI tools) - prefer nixpkgs when possible
@@ -78,23 +77,19 @@
     ];
   };
 
-  # Link Nix apps to ~/Applications for Spotlight indexing
-  # Alternative to mac-app-util until upstream is fixed
+  # Ensure Spotlight indexes Home Manager apps
+  # Note: Home Manager already creates ~/Applications/Home Manager Apps/
+  # We just need to ensure Spotlight sees it
   system.activationScripts.applications.text = lib.mkForce ''
-    echo "Setting up ~/Applications/Nix Apps..." >&2
-    app_folder="$HOME/Applications/Nix Apps"
-    mkdir -p "$app_folder"
+    user_home="/Users/${username}"
+    hm_apps="$user_home/Applications/Home Manager Apps"
 
-    # Remove broken symlinks
-    find "$app_folder" -type l ! -exec test -e {} \; -delete
-
-    # Create symlinks for all .app bundles in /Applications
-    for app in $(find /Applications -maxdepth 1 -type d -name "*.app" 2>/dev/null); do
-      app_name=$(basename "$app")
-      if [ ! -e "$app_folder/$app_name" ]; then
-        ln -sf "$app" "$app_folder/$app_name"
-      fi
-    done
+    if [ -d "$hm_apps" ]; then
+      echo "Requesting Spotlight index for Nix apps..." >&2
+      sudo -u ${username} mdimport "$hm_apps" 2>/dev/null || true
+      echo "✓ Nix apps are at: $hm_apps" >&2
+      echo "  If Spotlight doesn't find them, run: ./FIX-SPOTLIGHT.sh" >&2
+    fi
   '';
 
   # System hostname

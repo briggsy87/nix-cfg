@@ -6,6 +6,9 @@
     isync # mbsync for syncing mail
     msmtp # For sending mail
     pass  # Password manager (recommended for storing app passwords)
+    w3m
+    python3 # For OAuth2 helper script
+    cyrus_sasl # SASL authentication support
   ];
 
   # Neomutt configuration
@@ -75,8 +78,9 @@
     text/html; lynx -assume_charset=%{charset} -display_charset=utf-8 -dump -width=1024 %s; nametemplate=%s.html; copiousoutput
   '';
 
-  # Add w3m or lynx for HTML viewing
-  home.packages = with pkgs; [
-    w3m
-  ];
+  # OAuth2 helper script for Gmail
+  xdg.configFile."neomutt/mutt_oauth2.py" = {
+    source = ./mutt_oauth2.py;
+    executable = true;
+  };
 }
