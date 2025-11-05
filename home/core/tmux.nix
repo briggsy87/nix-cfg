@@ -9,6 +9,7 @@
     historyLimit = 100000;
     keyMode = "vi";
     prefix = "C-a";
+    shell = "${pkgs.zsh}/bin/zsh";  # Use zsh instead of default shell
 
     # Tmux plugins (Nix-managed, no TPM needed)
     plugins = with pkgs.tmuxPlugins; [
@@ -17,13 +18,26 @@
         plugin = dracula;
         extraConfig = ''
           # Dracula theme configuration
-          set -g @dracula-show-battery false
+          # Status bar modules (right side)
+          set -g @dracula-show-battery true
           set -g @dracula-show-network false
-          set -g @dracula-show-weather false
+          set -g @dracula-show-weather true
+          set -g @dracula-show-location false  # Hide location for privacy (was showing "redacted")
+          set -g @dracula-show-fahrenheit false  # Use Celsius instead of Fahrenheit
+          set -g @dracula-fixed-location "Toronto"  # Set your Canadian city
+
+          # Time settings
           set -g @dracula-show-time true
-          set -g @dracula-show-location false
-          set -g @dracula-military-time true
+          set -g @dracula-military-time true  # 24-hour format
+          set -g @dracula-day-month true  # Show day/month
+
+          # Left side icon
           set -g @dracula-show-left-icon session
+
+          # Optional: Customize colors
+          set -g @dracula-cpu-usage false
+          set -g @dracula-ram-usage false
+          set -g @dracula-gpu-usage false
         '';
       }
 
@@ -68,6 +82,17 @@
       setw -g mode-keys vi
       bind -T copy-mode-vi v send -X begin-selection
       bind -T copy-mode-vi y send -X copy-selection-and-cancel
+      bind -T copy-mode-vi C-v send -X rectangle-toggle
+
+      # Enable clipboard integration (tmux-yank plugin handles the actual copying)
+      set -g set-clipboard on
+
+      # Additional copy mode bindings
+      bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-and-cancel
+      bind -T copy-mode-vi Enter send -X copy-pipe-and-cancel
+
+      # Easy way to copy current pane content
+      bind -T prefix C-c run-shell 'tmux show-buffer | pbcopy'
 
       # Split panes using | and -
       bind | split-window -h
@@ -103,9 +128,6 @@
       set -g pane-base-index 1
       set-window-option -g pane-base-index 1
       set-option -g renumber-windows on
-
-      # Don't exit copy mode when dragging with mouse
-      unbind -T copy-mode-vi MouseDragEnd1Pane
 
       # vim-tmux-navigator integration
       # Smart pane switching with awareness of Vim splits

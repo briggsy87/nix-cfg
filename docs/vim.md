@@ -1298,6 +1298,36 @@ Your Neovim setup is deeply integrated with tmux for a powerful terminal workflo
 - ✅ **Seamless vim/tmux navigation** (C-hjkl works across both)
 - ✅ **Nix-managed plugins** (sensible, yank, vim-tmux-navigator)
 - ✅ **Catppuccin theme** available as backup (commented out)
+- ✅ **Zsh shell** with Starship prompt (not default macOS shell)
+- ✅ **Full clipboard integration** (copy to system clipboard)
+
+### Status Bar Configuration
+
+The Dracula theme status bar shows (from left to right):
+- **Session name** on the left
+- **Battery percentage** (if applicable)
+- **Weather** in Celsius for Toronto (configurable)
+- **Time** in 24-hour format
+- **Date** (day/month)
+
+**Customizing location for weather:**
+
+Edit `home/core/tmux.nix` and change:
+```nix
+set -g @dracula-fixed-location "Toronto"  # Change to your city
+```
+
+**Note:** The weather feature requires internet connectivity. The "redacted" text you saw was the location being hidden for privacy (now disabled with `@dracula-show-location false`).
+
+**Disabling modules:**
+
+To hide battery, weather, or other elements, edit `home/core/tmux.nix`:
+```nix
+set -g @dracula-show-battery false  # Hide battery
+set -g @dracula-show-weather false  # Hide weather
+```
+
+Then rebuild with `darwin-rebuild switch --flake .#m4pro`.
 
 ### Tmux Keybindings
 
@@ -1317,14 +1347,39 @@ Your Neovim setup is deeply integrated with tmux for a powerful terminal workflo
 | `C-a r` | Reload config |
 | `C-a [` | Enter copy mode (vi keys) |
 
-#### Copy Mode (Vi Keys)
+#### Copy Mode (Vi Keys) - Copy to System Clipboard
+
+Tmux has full clipboard integration via the tmux-yank plugin.
 
 | Key | Action |
 |-----|--------|
 | `C-a [` | Enter copy mode |
-| `v` | Begin selection |
-| `y` | Copy selection to clipboard |
-| `q` / `Esc` | Exit copy mode |
+| `v` | Begin selection (visual mode) |
+| `V` | Begin line selection |
+| `C-v` | Rectangle selection (block mode) |
+| `y` | Copy selection to system clipboard and exit |
+| `Enter` | Copy selection to system clipboard and exit |
+| `q` / `Esc` | Exit copy mode without copying |
+
+**How to copy text from tmux:**
+
+1. **Using keyboard:**
+   - Press `C-a [` to enter copy mode
+   - Navigate with `h/j/k/l` or arrow keys
+   - Press `v` to start selection
+   - Move cursor to select text
+   - Press `y` or `Enter` to copy to system clipboard
+   - Paste anywhere with `Cmd+V` (macOS) or `Ctrl+V` (Linux)
+
+2. **Using mouse:**
+   - Simply select text with your mouse
+   - It's automatically copied to system clipboard
+   - Paste anywhere with `Cmd+V` (macOS) or `Ctrl+V` (Linux)
+
+3. **Copy entire pane:**
+   - Press `C-a C-c` to copy all visible pane content to clipboard
+
+**Note:** All copied text goes to your system clipboard, not just tmux buffer!
 
 #### Window Management
 
