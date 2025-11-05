@@ -1,6 +1,10 @@
 # Neovim Configuration Guide
 
-Complete documentation for the modular, Nix-managed Neovim setup with lazy.nvim, LSP, Treesitter, and modern plugins.
+Complete documentation for the modular, Nix-managed Neovim setup without lazy.nvim.
+
+**Last Updated:** 2025-11-04
+**Neovim Version:** 0.11+
+**Configuration Type:** Modular, Nix-managed, Direct plugin loading
 
 ---
 
@@ -8,67 +12,114 @@ Complete documentation for the modular, Nix-managed Neovim setup with lazy.nvim,
 
 1. [Philosophy & Architecture](#philosophy--architecture)
 2. [Configuration Structure](#configuration-structure)
-3. [Leader Key](#leader-key)
-4. [Editor Settings](#editor-settings)
-5. [Colorschemes & Theming](#colorschemes--theming)
-6. [Plugins Overview](#plugins-overview)
-7. [Keybindings Reference](#keybindings-reference)
-8. [LSP (Language Server Protocol)](#lsp-language-server-protocol)
-9. [Code Completion](#code-completion)
-10. [Formatting & Linting](#formatting--linting)
-11. [File Navigation](#file-navigation)
-12. [Git Integration](#git-integration)
-13. [Tips & Workflows](#tips--workflows)
+3. [Quick Start](#quick-start)
+4. [Leader Key](#leader-key)
+5. [Editor Settings](#editor-settings)
+6. [Colorschemes & Theming](#colorschemes--theming)
+7. [Plugins Overview](#plugins-overview)
+8. [Complete Keybindings Reference](#complete-keybindings-reference)
+9. [LSP Configuration](#lsp-configuration)
+10. [Code Completion](#code-completion)
+11. [Formatting & Linting](#formatting--linting)
+12. [File Navigation](#file-navigation)
+13. [Git Integration](#git-integration)
+14. [Customization Guide](#customization-guide)
+15. [Tips & Workflows](#tips--workflows)
+16. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Philosophy & Architecture
 
-This Neovim configuration is **declarative, modular, and managed through Nix + lazy.nvim**:
+This Neovim configuration is **declarative, modular, and fully Nix-managed**:
 
-- **lazy.nvim** for fast, lazy-loaded plugin management
-- **Modular plugin configuration** - each plugin in its own file
-- **All plugins** installed via `pkgs.vimPlugins` in `home/shared.nix` (offline-first)
-- **All LSP servers, formatters, and linters** installed as Nix packages
-- **Uses Neovim 0.11+ native LSP API** for modern LSP configuration
-- **none-ls.nvim** for external formatters and linters
+### Core Principles
 
-**Benefits:**
-- Clean, maintainable, modular configuration
-- Fast startup with lazy loading
-- Reproducible across all machines
-- Version controlled and portable
-- Works offline (plugins installed via Nix)
+- **No plugin manager** - Plugins installed directly via Nix (`pkgs.vimPlugins`)
+- **No lazy loading** - Fast startup with all plugins loaded
+- **Modular configuration** - Each plugin in its own file
+- **Neovim 0.11+ native LSP API** - Modern, built-in LSP configuration
+- **Offline-first** - Everything installed via Nix, works without internet
+- **Version controlled** - Entire config in Git with Nix flake.lock
+- **Reproducible** - Identical setup across all machines
+
+### Benefits
+
+✅ **Clean separation** - Config, keymaps, autocmds all in separate files
+✅ **Easy to maintain** - One file per plugin, easy to add/remove
+✅ **Reproducible builds** - Nix ensures exact versions
+✅ **Works offline** - No runtime downloads
+✅ **Fast startup** - Direct loading, no lazy.nvim overhead
+✅ **Type-safe** - Nix catches configuration errors at build time
 
 ---
 
 ## Configuration Structure
 
 ```
-home/nvim/
-├── init.lua                    # Entry point, bootstraps lazy.nvim
-├── lua/
-│   ├── config/
-│   │   ├── options.lua        # Editor options (line numbers, tabs, etc.)
-│   │   ├── keymaps.lua        # General keymaps
-│   │   └── autocmds.lua       # Autocommands (transparency, LSP attach)
-│   └── plugins/
-│       ├── colorscheme.lua    # Theme configuration
-│       ├── telescope.lua      # Fuzzy finder
-│       ├── treesitter.lua     # Syntax highlighting
-│       ├── lsp.lua            # LSP configuration
-│       ├── none-ls.lua        # Formatters/linters
-│       ├── completion.lua     # nvim-cmp setup
-│       ├── oil.lua            # File manager
-│       ├── git.lua            # Git integration
-│       └── which-key.lua      # Keybinding hints
+home/
+├── core/
+│   └── neovim.nix           # Nix config: plugin list + xdg.configFile setup
+├── nvim/
+│   ├── init.lua             # Entry point: loads config + plugins
+│   └── lua/
+│       ├── config/
+│       │   ├── options.lua        # Editor settings (line numbers, tabs, etc.)
+│       │   ├── keymaps.lua        # General keymaps (window nav, text movement)
+│       │   └── autocmds.lua       # Autocommands (transparency, LSP attach, etc.)
+│       └── plugins/
+│           ├── colorscheme.lua    # Dracula theme configuration
+│           ├── lualine.lua        # Status line
+│           ├── telescope.lua      # Fuzzy finder + keymaps
+│           ├── treesitter.lua     # Syntax highlighting
+│           ├── lsp.lua            # LSP server configuration (Neovim 0.11+ API)
+│           ├── none-ls.lua        # External formatters/linters
+│           ├── completion.lua     # nvim-cmp setup
+│           ├── oil.lua            # File manager (edit-as-buffer style)
+│           ├── neotree.lua        # Traditional file tree explorer
+│           ├── git.lua            # Gitsigns + LazyGit integration
+│           └── which-key.lua      # Keybinding hints
 ```
 
-**How it works:**
-1. `init.lua` bootstraps lazy.nvim and loads `config/` modules
-2. lazy.nvim auto-loads all files in `plugins/` directory
-3. Each plugin is configured independently
-4. Plugins are lazy-loaded for fast startup
+### How It Works
+
+1. **Nix installs plugins** via `programs.neovim.plugins` in `home/core/neovim.nix`
+2. **Nix copies config** to `~/.config/nvim/` via `xdg.configFile`
+3. **init.lua loads** config files (`options`, `keymaps`, `autocmds`)
+4. **init.lua loads** plugin configs (each calls `require('plugin').setup()`)
+5. **Plugins are ready** - All configured and working on first launch
+
+---
+
+## Quick Start
+
+### Opening Neovim
+
+```bash
+nvim              # Standard
+nv                # Shell alias (configured via Nix)
+vi                # Alias (viAlias = true)
+vim               # Alias (vimAlias = true)
+```
+
+### First Steps
+
+1. **Open Neovim**: `nv`
+2. **Check health**: `:checkhealth` (verify LSP servers, plugins)
+3. **Open file tree**: Press `<leader>e` (Space + e)
+4. **Find files**: Press `<leader>ff` (Space + f + f)
+5. **See all keybindings**: Press `<leader>` and wait (which-key appears)
+
+### Essential Commands
+
+```vim
+:LspInfo          " Check LSP server status
+:Telescope        " Browse all telescope commands
+:Neotree          " Open file tree
+:Oil              " Open directory as buffer
+:LazyGit          " Open LazyGit TUI
+:checkhealth      " System health check
+```
 
 ---
 
@@ -76,199 +127,336 @@ home/nvim/
 
 **Leader key is set to `<Space>`**
 
-All custom keybindings in this guide that reference `<leader>` mean pressing the spacebar first.
+All custom keybindings that reference `<leader>` mean pressing the spacebar first.
 
-Example: `<leader>ff` = Press `Space`, then `f`, then `f`
+**Example:** `<leader>ff` = Press `Space`, then `f`, then `f`
 
 ---
 
 ## Editor Settings
 
-Configured in `home/nvim/init.lua:4-12`:
+Configured in `lua/config/options.lua`:
 
 | Setting | Value | Description |
 |---------|-------|-------------|
 | `number` | `true` | Show absolute line numbers |
-| `relativenumber` | `true` | Show relative line numbers for easy navigation |
+| `relativenumber` | `true` | Show relative line numbers for navigation |
 | `expandtab` | `true` | Use spaces instead of tabs |
 | `shiftwidth` | `2` | Indent size (2 spaces) |
 | `tabstop` | `2` | Tab width (2 spaces) |
 | `smartindent` | `true` | Auto-indent new lines intelligently |
 | `wrap` | `false` | Don't wrap long lines |
 | `termguicolors` | `true` | Enable 24-bit RGB colors |
+| `ignorecase` | `true` | Case-insensitive search |
+| `smartcase` | `true` | Case-sensitive if uppercase used |
+| `signcolumn` | `yes` | Always show sign column (git, diagnostics) |
+| `cursorline` | `true` | Highlight current line |
+| `scrolloff` | `8` | Keep 8 lines above/below cursor |
+| `sidescrolloff` | `8` | Keep 8 columns left/right of cursor |
+| `splitright` | `true` | New vertical splits go right |
+| `splitbelow` | `true` | New horizontal splits go below |
+| `mouse` | `a` | Enable mouse support |
+| `clipboard` | `unnamedplus` | Use system clipboard |
+| `undofile` | `true` | Persistent undo history |
+| `updatetime` | `250ms` | Faster completion |
+| `timeoutlen` | `300ms` | Faster key sequence timeout |
 
 ---
 
 ## Colorschemes & Theming
 
 ### Active Theme
-**Dracula** - Classic purple/pink dark theme with excellent contrast and transparency support
+
+**Dracula** - Classic purple/pink dark theme with excellent contrast
 
 ### Transparency
-Neovim is configured to respect terminal transparency (50% opacity from Ghostty config).
-All backgrounds are set to `none` so the terminal background shows through.
 
-The colorscheme loader automatically tries themes in this order:
-1. Dracula (purple/pink classic)
-2. TokyoNight Moon (purple accents)
-3. Catppuccin Mocha (purple tones)
-4. Kanagawa (subtle purple)
-5. Carbonfox (purple highlights)
-6. Habamax (built-in fallback)
+Neovim is configured to **respect terminal transparency** (50% opacity from Ghostty config).
+
+All backgrounds are set to `none` via autocmd in `lua/config/autocmds.lua`:
+- Normal windows
+- Floating windows
+- Sign column
+- Line numbers
+- Status areas
+
+### Available Themes
+
+Installed via Nix in `home/core/neovim.nix`:
+
+- **dracula-nvim** - Purple/pink classic (active)
+- **tokyonight-nvim** - Tokyo Night Moon variant (purple accents)
+- **catppuccin-nvim** - Catppuccin Mocha variant (purple tones)
+- **nightfox-nvim** - Nightfox Carbonfox variant (purple highlights)
+- **kanagawa-nvim** - Japanese-inspired dark with subtle purple
 
 ### Switching Themes
 
-Uncomment one of these lines in `home/nvim/init.lua:78-83` to override the default:
+Edit `home/nvim/lua/plugins/colorscheme.lua`:
 
 ```lua
--- Purple/Dark theme options:
--- vim.cmd('colorscheme dracula')           -- Active default (purple/pink classic)
--- vim.cmd('colorscheme tokyonight-moon')   -- Dark with purple accents
--- vim.cmd('colorscheme catppuccin-mocha')  -- Purple-toned variant
--- vim.cmd('colorscheme carbonfox')         -- Dark with purple highlights
--- vim.cmd('colorscheme kanagawa')          -- Subtle purple/dark theme
+-- Comment out current theme:
+-- require('dracula').setup({ ... })
+-- vim.cmd('colorscheme dracula')
+
+-- Uncomment desired theme:
+require('tokyonight').setup({ style = 'moon', transparent = true })
+vim.cmd('colorscheme tokyonight-moon')
 ```
 
-**After changing, rebuild your Nix config:**
-```bash
-darwin-rebuild switch --flake .#m4pro
-```
-
-### Available Colorscheme Plugins
-
-Installed in `home/shared.nix:116-120`:
-
-- **dracula-nvim** - Classic Dracula theme (purple/pink) - **Active**
-- **tokyonight-nvim** - Tokyo Night Moon variant (purple accents)
-- **catppuccin-nvim** - Catppuccin Mocha variant (purple tones)
-- **nightfox-nvim** - Nightfox family (Carbonfox has purple highlights)
-- **kanagawa-nvim** - Japanese-inspired dark theme with subtle purple
+Then restart Neovim (no rebuild needed - Lua config is live).
 
 ---
 
 ## Plugins Overview
 
-### Essential Plugins
+### Core Infrastructure
 
-| Plugin | Purpose | Config Location |
-|--------|---------|----------------|
-| **plenary.nvim** | Lua utility library (required by many plugins) | Dependency only |
-| **telescope.nvim** | Fuzzy finder for files, grep, buffers, etc. | `init.lua:51-55` |
-| **nvim-treesitter** | Syntax highlighting and code understanding | `init.lua:58-69` |
-| **none-ls.nvim** | Formatting and linting integration | `init.lua:117-130` |
-| **nvim-cmp** | Autocompletion engine | `init.lua:133-149` |
-| **cmp-nvim-lsp** | LSP completion source for nvim-cmp | Auto-configured |
-| **cmp-buffer** | Buffer completion source | Auto-configured |
-| **cmp-path** | File path completion source | Auto-configured |
-| **luasnip** | Snippet engine | `init.lua:135-136` |
-| **friendly-snippets** | Pre-made snippet collection | Auto-loaded |
-| **gitsigns.nvim** | Git integration (diff markers, hunks) | `init.lua:158` |
-| **lazygit.nvim** | LazyGit terminal UI integration | `init.lua:157` |
-| **oil.nvim** | File manager (edit filesystem like a buffer) | `init.lua:152-153` |
-| **which-key.nvim** | Keybinding hints/documentation | Auto-configured |
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **plenary.nvim** | Lua utility library (required by many plugins) | N/A (dependency) |
+| **nvim-web-devicons** | File icons | N/A (dependency) |
+| **nui.nvim** | UI components (required by neo-tree) | N/A (dependency) |
 
----
+### UI & Navigation
 
-## Keybindings Reference
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **lualine.nvim** | Status line at bottom | `plugins/lualine.lua` |
+| **telescope.nvim** | Fuzzy finder for files, grep, buffers | `plugins/telescope.lua` |
+| **telescope-ui-select.nvim** | Better UI for selections (LSP, etc.) | `plugins/telescope.lua` |
+| **neo-tree.nvim** | File explorer with tree view | `plugins/neotree.lua` |
+| **oil.nvim** | Edit filesystem like a buffer | `plugins/oil.lua` |
+| **which-key.nvim** | Keybinding hints popup | `plugins/which-key.lua` |
 
-### Telescope (Fuzzy Finding)
+### Language Support
 
-Located in `init.lua:51-55`
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `<leader>ff` | Find files | Search files in current directory |
-| `<leader>fg` | Live grep | Search text across all files |
-| `<leader>fb` | Buffers | List and switch between open buffers |
-| `<leader>fh` | Help tags | Search Neovim help documentation |
-
-**Telescope Controls (once open):**
-- `<C-n>` / `<Down>` - Next item
-- `<C-p>` / `<Up>` - Previous item
-- `<CR>` - Select item
-- `<C-c>` / `<Esc>` - Close
-- `<C-u>` / `<C-d>` - Scroll preview up/down
-
-### LSP (Language Server Protocol)
-
-Configured via `LspAttach` autocmd in `init.lua:75-91`
-
-These keybindings are **only active in buffers with an LSP attached**:
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `gd` | Go to definition | Jump to where symbol is defined |
-| `gr` | Go to references | Find all references to symbol |
-| `K` | Hover documentation | Show docs for symbol under cursor |
-| `<leader>rn` | Rename | Rename symbol across project |
-| `<leader>ca` | Code action | Show available code actions |
-| `[d` | Previous diagnostic | Jump to previous error/warning |
-| `]d` | Next diagnostic | Jump to next error/warning |
-| `<leader>f` | Format buffer | Format code (async) |
-
-### Code Completion
-
-Configured in `init.lua:133-149`
-
-Active in **Insert mode**:
-
-| Keybinding | Action |
-|------------|--------|
-| `<C-Space>` | Trigger completion manually |
-| `<CR>` | Confirm selected completion |
-| `<Tab>` | Select next completion item |
-| `<S-Tab>` | Select previous completion item |
-
-Completion sources (in order):
-1. LSP suggestions
-2. File paths
-3. Buffer words
-4. Snippets
-
-### File Navigation (Oil.nvim)
-
-Configured in `init.lua:152-153`
-
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `-` | Open Oil | Edit parent directory as a buffer |
-
-**Inside Oil buffer:**
-- Edit the buffer like normal text (add/delete/rename files)
-- `<CR>` - Open file or directory
-- `:w` - Save changes (actually performs file operations)
-- `:q` - Quit without saving changes
-- `g?` - Show help
-
-**Example workflow:**
-1. Press `-` to open current directory
-2. Use `dd` to delete a file line
-3. Use `o` to create a new line and type filename
-4. Press `:w` to apply changes to filesystem
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **nvim-treesitter** | Syntax highlighting & code understanding | `plugins/treesitter.lua` |
+| **none-ls.nvim** | External formatters & linters | `plugins/none-ls.lua` |
+| **nvim-cmp** | Autocompletion engine | `plugins/completion.lua` |
+| **cmp-nvim-lsp** | LSP completion source | `plugins/completion.lua` |
+| **cmp-buffer** | Buffer text completion | `plugins/completion.lua` |
+| **cmp-path** | File path completion | `plugins/completion.lua` |
+| **luasnip** | Snippet engine | `plugins/completion.lua` |
+| **cmp_luasnip** | Snippet completion source | `plugins/completion.lua` |
+| **friendly-snippets** | Pre-made snippets | `plugins/completion.lua` |
 
 ### Git Integration
 
-Configured in `init.lua:157-158`
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **gitsigns.nvim** | Git diff markers in gutter | `plugins/git.lua` |
+| **lazygit.nvim** | LazyGit TUI integration | `plugins/git.lua` |
 
-| Keybinding | Action | Description |
-|------------|--------|-------------|
-| `<leader>gg` | LazyGit | Open LazyGit terminal UI |
+### Colorschemes
 
-**GitSigns** (gitsigns.nvim) provides:
-- Diff indicators in sign column (added/changed/deleted lines)
-- Inline git blame (configurable)
+| Plugin | Description |
+|--------|-------------|
+| **dracula-nvim** | Active - Purple/pink theme |
+| **tokyonight-nvim** | Alternative - Moon variant |
+| **catppuccin-nvim** | Alternative - Mocha variant |
+| **nightfox-nvim** | Alternative - Carbonfox |
+| **kanagawa-nvim** | Alternative - Subtle purple |
 
-### General Vim Motions
+---
 
-Standard Vim keybindings are available:
+## Complete Keybindings Reference
+
+### Leader Key
+
+`<leader>` = `Space`
+
+### General Keymaps
+
+Configured in `lua/config/keymaps.lua`:
+
+#### Window Navigation
+
+| Key | Action |
+|-----|--------|
+| `<C-h>` | Go to left window |
+| `<C-j>` | Go to lower window |
+| `<C-k>` | Go to upper window |
+| `<C-l>` | Go to right window |
+
+#### Window Resizing
+
+| Key | Action |
+|-----|--------|
+| `<C-Up>` | Increase window height |
+| `<C-Down>` | Decrease window height |
+| `<C-Left>` | Decrease window width |
+| `<C-Right>` | Increase window width |
+
+#### Text Manipulation (Visual Mode)
+
+| Key | Action |
+|-----|--------|
+| `J` | Move selected text down |
+| `K` | Move selected text up |
+| `<` | Indent left (stays in visual mode) |
+| `>` | Indent right (stays in visual mode) |
+| `p` | Paste without replacing clipboard |
+
+#### Utility
+
+| Key | Action |
+|-----|--------|
+| `<Esc>` | Clear search highlight |
+| `<leader>w` | Save file |
+| `<leader>q` | Quit |
+
+#### Buffer Management
+
+| Key | Action |
+|-----|--------|
+| `<leader>bd` | Delete buffer |
+| `[b` | Previous buffer |
+| `]b` | Next buffer |
+
+### Telescope (Fuzzy Finder)
+
+Configured in `lua/plugins/telescope.lua`:
+
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep (search text) |
+| `<leader>fb` | Buffers |
+| `<leader>fh` | Help tags |
+| `<leader>fr` | Recent files |
+| `<leader>fc` | Commands |
+| `<leader>fk` | Keymaps |
+
+**Inside Telescope:**
+- `<C-n>` / `<C-j>` / `<Down>` - Next item
+- `<C-p>` / `<C-k>` / `<Up>` - Previous item
+- `<CR>` - Select item
+- `<C-c>` / `<Esc>` - Close
+
+### LSP Keybindings
+
+Configured in `lua/config/autocmds.lua` (LspAttach event):
+
+**Only active in buffers with LSP attached**
+
+| Key | Action |
+|-----|--------|
+| `gd` | Go to definition |
+| `gr` | Go to references |
+| `gD` | Go to declaration |
+| `gI` | Go to implementation |
+| `gy` | Go to type definition |
+| `K` | Hover documentation |
+| `gK` | Signature help |
+| `<leader>rn` | Rename symbol |
+| `<leader>ca` | Code action |
+| `[d` | Previous diagnostic |
+| `]d` | Next diagnostic |
+| `<leader>f` | Format buffer |
+
+### Completion
+
+Configured in `lua/plugins/completion.lua`:
+
+**Active in Insert mode:**
+
+| Key | Action |
+|-----|--------|
+| `<C-Space>` | Trigger completion |
+| `<CR>` | Confirm selection |
+| `<C-n>` / `<Tab>` | Next item / Jump to next snippet field |
+| `<C-p>` / `<S-Tab>` | Previous item / Jump to previous snippet field |
+| `<C-e>` | Abort completion |
+| `<C-b>` | Scroll docs up |
+| `<C-f>` | Scroll docs down |
+
+### File Navigation
+
+#### Neo-tree (File Explorer)
+
+Configured in `lua/plugins/neotree.lua`:
+
+| Key | Action |
+|-----|--------|
+| `<leader>e` | Toggle Neo-tree |
+| `<leader>fe` | Reveal current file in Neo-tree |
+
+**Inside Neo-tree:**
+- `<CR>` - Open file/folder
+- `a` - Add file
+- `A` - Add directory
+- `d` - Delete
+- `r` - Rename
+- `y` - Copy to clipboard
+- `x` - Cut to clipboard
+- `p` - Paste from clipboard
+- `c` - Copy
+- `m` - Move
+- `s` - Open in vertical split
+- `S` - Open in horizontal split
+- `t` - Open in new tab
+- `P` - Toggle preview
+- `R` - Refresh
+- `q` - Close
+- `?` - Show help
+
+#### Oil (Edit Filesystem as Buffer)
+
+Configured in `lua/plugins/oil.lua`:
+
+| Key | Action |
+|-----|--------|
+| `-` | Open parent directory in Oil |
+
+**Inside Oil:**
+- Edit like normal buffer (use `dd`, `yy`, `p`, etc.)
+- `:w` - Save changes (performs actual file operations)
+- `:q` - Quit without saving
+- `<CR>` - Open file or enter directory
+- `<C-v>` - Open in vertical split
+- `<C-s>` - Open in horizontal split
+- `g?` - Show help
+
+### Git Integration
+
+Configured in `lua/plugins/git.lua`:
+
+#### LazyGit
+
+| Key | Action |
+|-----|--------|
+| `<leader>gg` | Open LazyGit |
+
+#### Gitsigns (Git Hunks)
+
+| Key | Action |
+|-----|--------|
+| `]c` | Next git hunk |
+| `[c` | Previous git hunk |
+| `<leader>hs` | Stage hunk |
+| `<leader>hr` | Reset hunk |
+| `<leader>hS` | Stage buffer |
+| `<leader>hu` | Undo stage hunk |
+| `<leader>hR` | Reset buffer |
+| `<leader>hp` | Preview hunk |
+| `<leader>hb` | Blame line |
+| `<leader>hd` | Diff this |
+| `<leader>hD` | Diff this ~ |
+| `ih` | Select hunk (text object) |
+
+### Standard Vim Motions
 
 **Navigation:**
 - `h/j/k/l` - Left/Down/Up/Right
-- `w/b` - Forward/backward word
+- `w/b/e` - Word forward/backward/end
 - `0/$` - Start/end of line
 - `gg/G` - Top/bottom of file
 - `{/}` - Previous/next paragraph
-- `Ctrl-u/Ctrl-d` - Scroll up/down half page
+- `Ctrl-u/Ctrl-d` - Scroll half page up/down
+- `Ctrl-b/Ctrl-f` - Scroll full page up/down
 
 **Editing:**
 - `i/a` - Insert before/after cursor
@@ -276,7 +464,7 @@ Standard Vim keybindings are available:
 - `o/O` - New line below/above
 - `dd` - Delete line
 - `yy` - Yank (copy) line
-- `p/P` - Paste after/before cursor
+- `p/P` - Paste after/before
 - `u` - Undo
 - `Ctrl-r` - Redo
 - `.` - Repeat last command
@@ -288,59 +476,81 @@ Standard Vim keybindings are available:
 
 ---
 
-## LSP (Language Server Protocol)
+## LSP Configuration
 
-### Supported Languages
+### Architecture
 
-Configured in `init.lua:93-101`:
+Using **Neovim 0.11+ native LSP API** (`vim.lsp.config`, `vim.lsp.enable`).
 
-| Language | LSP Server | Filetypes | Nix Package |
-|----------|-----------|-----------|-------------|
-| Python | Pyright | `.py` | `pyright` |
-| JavaScript/TypeScript | ts_ls | `.js`, `.ts`, `.jsx`, `.tsx` | `typescript-language-server` |
-| Terraform | terraformls | `.tf` | `terraform-ls` |
-| JSON | jsonls | `.json` | `vscode-langservers-extracted` |
-| YAML | yamlls | `.yaml`, `.yml` | `yaml-language-server` |
-| Bash/Shell | bashls | `.sh`, `.bash` | `bash-language-server` |
-| Dockerfile | dockerls | `Dockerfile` | `dockerfile-language-server` |
+**No nvim-lspconfig dependency** - Everything built-in to Neovim 0.11+.
 
-### How LSP Works
+### Configured LSP Servers
 
-1. **Auto-start**: When you open a file, Neovim detects the filetype
-2. **Root detection**: Finds project root by looking for `.git` or `.gitignore`
-3. **Server launch**: Starts the appropriate LSP server
-4. **Capabilities**: Enables completions, diagnostics, formatting, etc.
-5. **Keybindings**: LSP-specific keys become available via `LspAttach` event
+Defined in `lua/plugins/lsp.lua`:
+
+| Language | LSP Server | Filetypes | Nix Package | Purpose |
+|----------|-----------|-----------|-------------|---------|
+| Python | `pyright` | `.py` | `pyright` | Type checking, IntelliSense |
+| Python | `ruff` | `.py` | `ruff` | Linting, diagnostics |
+| JavaScript/TypeScript | `ts_ls` | `.js`, `.ts`, `.jsx`, `.tsx` | `typescript-language-server` | Type checking, completion |
+| Terraform | `terraformls` | `.tf` | `terraform-ls` | HCL support |
+| JSON | `jsonls` | `.json` | `vscode-langservers-extracted` | JSON schema validation |
+| YAML | `yamlls` | `.yaml`, `.yml` | `yaml-language-server` | YAML validation |
+| Bash | `bashls` | `.sh`, `.bash` | `bash-language-server` | Shell script support |
+| Docker | `dockerls` | `Dockerfile` | `dockerfile-language-server` | Dockerfile linting |
+
+### Python Setup
+
+**Dual LSP approach:**
+- **Pyright** - Type checking, IntelliSense, completions
+- **Ruff** - Fast linting and diagnostics
+
+Both run simultaneously, providing comprehensive Python support.
 
 ### LSP Features
 
-- **Diagnostics**: Real-time error/warning detection
-- **Code completion**: Context-aware suggestions
-- **Go to definition**: Jump to symbol definitions
-- **Find references**: Locate all uses of a symbol
-- **Hover documentation**: Inline docs
-- **Code actions**: Quick fixes and refactorings
-- **Rename**: Safe project-wide renaming
-- **Formatting**: Code formatting
+✅ **Diagnostics** - Real-time error/warning detection
+✅ **Code completion** - Context-aware suggestions
+✅ **Go to definition** - Jump to symbol definitions
+✅ **Find references** - Locate all uses of a symbol
+✅ **Hover documentation** - Inline docs on `K`
+✅ **Code actions** - Quick fixes and refactorings
+✅ **Rename** - Safe project-wide renaming
+✅ **Formatting** - Code formatting (via LSP or none-ls)
+
+### Diagnostic Configuration
+
+From `lua/plugins/lsp.lua`:
+
+- Virtual text with `●` prefix
+- Severity sorting enabled
+- Floating windows with rounded borders
+- Hover and signature help use rounded borders
 
 ### Adding a New LSP Server
 
-1. **Install LSP in Nix**:
-   ```nix
-   # In home/shared.nix, add to home.packages:
-   rust-analyzer  # Example
-   ```
+**1. Install via Nix** (`home/core/languages.nix`):
+```nix
+home.packages = with pkgs; [
+  # ... existing
+  rust-analyzer  # Example
+];
+```
 
-2. **Configure in init.lua**:
-   ```lua
-   -- Add to servers table around line 93:
-   local servers = {
-     -- ... existing servers
-     rust_analyzer = { filetypes = { 'rust' } },
-   }
-   ```
+**2. Configure in Neovim** (`home/nvim/lua/plugins/lsp.lua`):
+```lua
+local servers = {
+  -- ... existing servers
+  rust_analyzer = { filetypes = { 'rust' } },
+}
+```
 
-3. **Rebuild**: `darwin-rebuild switch --flake .#m4pro`
+**3. Rebuild**:
+```bash
+darwin-rebuild switch --flake .#m4pro
+```
+
+**4. Restart Neovim** - LSP auto-starts on opening Rust files
 
 ---
 
@@ -350,155 +560,356 @@ Powered by **nvim-cmp** with multiple sources.
 
 ### Completion Sources
 
-Configured in `init.lua:146-147`:
+Priority order (configured in `lua/plugins/completion.lua`):
 
 1. **nvim_lsp** - LSP server suggestions (highest priority)
-2. **path** - File path completions
-3. **buffer** - Words from current buffer
-4. **luasnip** - Snippet expansions
+2. **luasnip** - Snippet expansions
+3. **path** - File path completions
+4. **buffer** - Words from current buffer (lowest priority)
 
 ### How It Works
 
-- Type code normally
-- Completion menu appears automatically
-- Use `<Tab>` / `<S-Tab>` to navigate
-- Press `<CR>` to accept
-- Press `<C-Space>` to manually trigger
+1. Start typing in Insert mode
+2. Completion menu appears automatically
+3. Navigate with `<Tab>` / `<S-Tab>` or `<C-n>` / `<C-p>`
+4. Press `<CR>` to accept
+5. Press `<C-Space>` to manually trigger
+6. Snippets expand and allow jumping between fields with `<Tab>`
 
-### Snippets
+### Snippet Support
 
-Powered by **LuaSnip** with **friendly-snippets** collection.
+**Engine:** LuaSnip
+**Collection:** friendly-snippets (VSCode-style snippets)
 
-Example snippets:
+**Examples:**
 - `func` → function template
 - `for` → for loop
 - `if` → if statement
-- `cl` → console.log (JavaScript)
+- `cl` → `console.log` (JavaScript)
+- `def` → function definition (Python)
+
+### Visual Indicators
+
+Completion menu shows source:
+- `[LSP]` - From LSP server
+- `[Snippet]` - From LuaSnip
+- `[Path]` - File path
+- `[Buffer]` - Buffer text
+
+### Ghost Text
+
+Enabled - Shows inline completion preview in grey text.
 
 ---
 
 ## Formatting & Linting
 
-Handled by **none-ls.nvim** (formerly null-ls).
+Handled by **none-ls.nvim** (modern fork of null-ls).
 
 ### Configured Formatters
 
-From `init.lua:120-126`:
+From `lua/plugins/none-ls.lua`:
 
-| Language | Tool | Nix Package |
-|----------|------|-------------|
-| Python | Black + isort | `black`, `isort` |
-| JavaScript/TypeScript | Prettier | `prettier` |
-| Terraform | terraform_fmt | Built into `terraform` |
-| Shell | shfmt | `shfmt` |
-| Lua | stylua | `stylua` |
+| Language | Tool | Nix Package | Purpose |
+|----------|------|-------------|---------|
+| Python | Black | `black` | Opinionated formatter |
+| Python | isort | `isort` | Import sorting |
+| JavaScript/TypeScript | Prettier | `prettier` | Code formatting |
+| Terraform | terraform_fmt | Built into `terraform` | HCL formatting |
+| Shell | shfmt | `shfmt` | Shell script formatting |
+| Lua | stylua | `stylua` | Lua formatting |
 
 ### Configured Linters
 
-| Language | Tool | Nix Package |
-|----------|------|-------------|
-| Python | Ruff | `ruff` |
+| Language | Tool | Type | Nix Package |
+|----------|------|------|-------------|
+| Python | Ruff | LSP | `ruff` |
 
-### Using Formatters
+**Note:** Ruff linting is done via LSP server (configured in `lsp.lua`), not via none-ls.
 
-**Automatic on save**: Not configured by default
-**Manual formatting**: Press `<leader>f` in normal mode
+### Manual Formatting
+
+**Format current buffer:** `<leader>f` (Space + f)
+
+Runs asynchronously, won't block editing.
+
+### Format on Save (Optional)
+
+Currently **disabled**. To enable, uncomment in `lua/plugins/none-ls.lua`:
+
+```lua
+on_attach = function(client, bufnr)
+  if client.supports_method('textDocument/formatting') then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format({ bufnr = bufnr })
+      end,
+    })
+  end
+end,
+```
 
 ### Adding More Tools
 
-1. **Install in Nix**:
-   ```nix
-   # In home/shared.nix:
-   eslint_d  # Example
-   ```
+**1. Install via Nix** (`home/core/languages.nix`):
+```nix
+home.packages = with pkgs; [
+  # ... existing
+  eslint_d  # Example
+];
+```
 
-2. **Add to none-ls**:
-   ```lua
-   -- In init.lua, add to sources:
-   null_ls.builtins.diagnostics.eslint_d,
-   null_ls.builtins.formatting.eslint_d,
-   ```
+**2. Add to none-ls** (`lua/plugins/none-ls.lua`):
+```lua
+sources = {
+  -- ... existing
+  null_ls.builtins.diagnostics.eslint_d,
+  null_ls.builtins.formatting.eslint_d,
+}
+```
 
-3. **Rebuild**
+**3. Restart Neovim**
 
 ---
 
 ## File Navigation
 
-### Telescope
+### Two Explorers, Different Use Cases
 
-**Best for**: Finding files by name or content
+#### Neo-tree - Visual Tree Explorer
 
-```
-<leader>ff - Find files (fuzzy search filenames)
-<leader>fg - Live grep (search file contents)
-<leader>fb - Browse open buffers
-```
+**Best for:**
+- Exploring project structure
+- Navigating unfamiliar codebases
+- Seeing directory hierarchy at a glance
+- Visual file management
 
-**Pro tips:**
-- Start typing immediately to filter
-- Use space to separate search terms (AND search)
-- `!term` excludes results containing `term`
+**Open:** `<leader>e` or `<leader>fe`
 
-### Oil.nvim
+**Features:**
+- Persistent sidebar
+- Tree view with expand/collapse
+- Git status integration
+- File icons
+- Preview mode
+- Buffer and symbol views
 
-**Best for**: Bulk file operations (rename, delete, move)
+#### Oil - Edit Filesystem as Buffer
 
-```
-- (dash key) - Open parent directory
-```
+**Best for:**
+- Bulk file operations (rename, move, delete)
+- Quick edits in current directory
+- Vim motion-based file management
 
-**Workflow:**
-1. Press `-` to open directory as buffer
-2. Edit like normal text:
-   - `dd` to delete file
-   - `i` to rename file
-   - `o` to create new file
-3. Save with `:w` to apply changes
+**Open:** `-` (dash key)
 
-**Example - Renaming multiple files:**
-```
-1. Press `-`
-2. Visual select multiple lines (V)
-3. Use `:%s/old/new/g` to rename pattern
-4. Press :w to apply
-```
+**Features:**
+- Edit filesystem like text
+- Use `dd` to delete files
+- Use `:s/old/new/` to rename
+- Use `yy` and `p` to copy/paste files
+- Save with `:w` to apply changes
 
-### Netrw (Built-in, fallback)
+### Telescope - Fuzzy Finding
 
-If Oil doesn't work, use `:Ex` to open Netrw file explorer.
+**Best for:**
+- Finding files by name
+- Searching file contents
+- Switching buffers
+- Browsing help docs
+
+**Key commands:**
+- `<leader>ff` - Find files
+- `<leader>fg` - Live grep
+- `<leader>fb` - Buffers
+- `<leader>fr` - Recent files
+
+### Workflow Recommendations
+
+**Exploring new project:**
+1. Open Neo-tree (`<leader>e`)
+2. Browse structure
+3. Open files from tree
+
+**Quick file operations:**
+1. Press `-` to open Oil
+2. Edit filenames like text
+3. Save with `:w`
+
+**Finding specific file:**
+1. Press `<leader>ff`
+2. Type part of filename
+3. Select with `<CR>`
+
+**Searching for text:**
+1. Press `<leader>fg`
+2. Type search term
+3. Navigate results
 
 ---
 
 ## Git Integration
 
-### LazyGit
+### LazyGit (Full Git TUI)
 
-Press `<leader>gg` to open **LazyGit** - a full-featured Git TUI.
+**Open:** `<leader>gg`
 
-**LazyGit controls:**
+LazyGit is a terminal UI for Git with powerful features:
+
+**Inside LazyGit:**
 - `1-5` - Switch panels (Status/Files/Branches/Commits/Stash)
 - `j/k` - Navigate
 - `<Space>` - Stage/unstage files
 - `c` - Commit
 - `P` - Push
 - `p` - Pull
-- `x` - Open menu
+- `x` - Open command menu
 - `?` - Help
+- `q` - Quit
 
-### GitSigns
+### Gitsigns (Inline Git Indicators)
 
-**gitsigns.nvim** provides:
-- **Sign column indicators**: `+` added, `~` changed, `-` deleted
-- **Inline blame**: Shows git blame info (can be toggled)
-- **Hunk operations**: Stage/unstage individual hunks
+**Visual indicators:**
+- `│` - Added line (green in gutter)
+- `│` - Changed line (blue in gutter)
+- `_` - Deleted line (red in gutter)
+- `┆` - Untracked file
 
-Future keybindings can be added for:
-- `]c` / `[c` - Next/previous hunk
+**Hunk navigation:**
+- `]c` - Next hunk
+- `[c` - Previous hunk
+
+**Hunk operations:**
 - `<leader>hs` - Stage hunk
-- `<leader>hu` - Undo hunk
+- `<leader>hr` - Reset hunk
 - `<leader>hp` - Preview hunk
-- `<leader>hb` - Blame line
+- `<leader>hb` - Show blame for line
+- `<leader>hd` - Diff current file
+
+**Buffer operations:**
+- `<leader>hS` - Stage entire buffer
+- `<leader>hR` - Reset entire buffer
+- `<leader>hu` - Undo stage hunk
+
+---
+
+## Customization Guide
+
+### Configuration is Split into Modular Files
+
+**Location:** `home/nvim/lua/`
+
+### Adding a New Plugin
+
+**Example: Adding nvim-autopairs**
+
+**1. Install via Nix** (`home/core/neovim.nix`):
+```nix
+plugins = with pkgs.vimPlugins; [
+  # ... existing plugins
+  nvim-autopairs
+];
+```
+
+**2. Create plugin config** (`home/nvim/lua/plugins/autopairs.lua`):
+```lua
+-- Auto-close brackets, quotes, etc.
+require('nvim-autopairs').setup({
+  check_ts = true,  -- Use treesitter
+  ts_config = {
+    lua = { 'string' },
+    javascript = { 'template_string' },
+  },
+})
+```
+
+**3. Load in init.lua** (`home/nvim/init.lua`):
+```lua
+-- Add after existing plugin requires
+require('plugins.autopairs')
+```
+
+**4. Rebuild**:
+```bash
+darwin-rebuild switch --flake .#m4pro
+```
+
+**5. Restart Neovim**
+
+### Modifying Existing Plugin
+
+**Example: Change telescope layout**
+
+Edit `home/nvim/lua/plugins/telescope.lua`:
+```lua
+telescope.setup({
+  defaults = {
+    -- ... existing
+    layout_config = {
+      width = 0.95,  -- Changed from 0.87
+      height = 0.90, -- Changed from 0.80
+    },
+  },
+})
+```
+
+**Restart Neovim** (no rebuild needed - Lua is live).
+
+### Adding Keymaps
+
+Edit `home/nvim/lua/config/keymaps.lua`:
+```lua
+local map = vim.keymap.set
+
+-- Add at end of file
+map('n', '<leader>x', '<cmd>MyCommand<CR>', { desc = 'My custom command' })
+```
+
+**Restart Neovim**.
+
+### Adding Autocommands
+
+Edit `home/nvim/lua/config/autocmds.lua`:
+```lua
+-- Add at end of file
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  callback = function()
+    vim.opt_local.shiftwidth = 4  -- 4-space indent for Python
+    vim.opt_local.tabstop = 4
+  end,
+})
+```
+
+**Restart Neovim**.
+
+### Changing Editor Settings
+
+Edit `home/nvim/lua/config/options.lua`:
+```lua
+-- Change existing settings
+vim.opt.number = false          -- Disable line numbers
+vim.opt.wrap = true             -- Enable line wrap
+vim.opt.shiftwidth = 4          -- 4-space indent
+```
+
+**Restart Neovim**.
+
+### Switching Colorschemes
+
+Edit `home/nvim/lua/plugins/colorscheme.lua`:
+```lua
+-- Comment out Dracula
+-- require('dracula').setup({ ... })
+-- vim.cmd('colorscheme dracula')
+
+-- Enable TokyoNight
+require('tokyonight').setup({ style = 'moon', transparent = true })
+vim.cmd('colorscheme tokyonight-moon')
+```
+
+**Restart Neovim**.
 
 ---
 
@@ -506,248 +917,252 @@ Future keybindings can be added for:
 
 ### Common Workflows
 
-**Opening a project:**
+**Opening a Project:**
 ```
 1. cd /path/to/project
-2. nvim .
-3. Press <leader>ff to find files
-4. Start editing
+2. nv .
+3. <leader>e to browse with Neo-tree
+4. <leader>ff to find specific file
 ```
 
-**Searching for text across project:**
+**Searching Across Project:**
 ```
 1. <leader>fg
 2. Type search term
-3. Navigate results with Ctrl-n/p
-4. Press Enter to jump to file
+3. <C-n>/<C-p> to navigate
+4. <CR> to open file
 ```
 
-**Refactoring a variable:**
+**Refactoring a Variable:**
 ```
 1. Place cursor on variable
-2. Press <leader>rn
+2. <leader>rn
 3. Type new name
-4. Press Enter
+4. <CR> to apply across project
 ```
 
-**Fixing errors:**
+**Fixing Errors:**
 ```
-1. Open file with diagnostics
-2. Press ]d to jump to next error
-3. Press <leader>ca to see code actions
-4. Select fix and press Enter
-```
-
-**Quick file operations:**
-```
-1. Press - to open directory
-2. Delete unwanted files with dd
-3. Rename with ciw (change inner word)
-4. Press :w to apply changes
+1. ]d to jump to next diagnostic
+2. <leader>ca to see code actions
+3. Select fix with <CR>
+4. <leader>f to format if needed
 ```
 
-### Combining Tools
-
-**Find and replace across project:**
+**Bulk File Rename:**
 ```
-1. <leader>fg to search for term
-2. Note the files with matches
-3. Open quickfix with :copen
-4. Use :cfdo %s/old/new/g | update
+1. - to open Oil
+2. Use visual mode to select filenames
+3. :%s/old/new/g to rename pattern
+4. :w to apply changes
 ```
 
-**Git workflow:**
+**Git Commit Flow:**
 ```
 1. Make changes in Neovim
 2. <leader>gg to open LazyGit
-3. Stage/commit/push
-4. Close LazyGit to return to editing
+3. <Space> to stage files
+4. c to commit
+5. P to push
+6. q to return to editing
 ```
 
 ### Performance Tips
 
-- Use `<leader>fb` instead of `<leader>ff` when switching between already-open files
-- Close unused buffers with `:bd` to reduce memory
-- Use relative line numbers (`5j` to jump 5 lines down)
-- Learn text objects: `ci"` (change inside quotes), `da{` (delete around braces)
+- Use `<leader>fb` for open buffers (faster than file search)
+- Close unused buffers with `:bd`
+- Use relative line numbers (`5j` to jump 5 lines)
+- Learn text objects: `ci"` (change in quotes), `da{` (delete around braces)
+- Use `.` to repeat last action
+- Use `*` to search for word under cursor
 
-### Debugging
+### Productivity Boosters
 
-**Check LSP status:**
+**Multiple cursors alternative:**
 ```
-:LspInfo
-```
-
-**Check diagnostics:**
-```
-:lua vim.diagnostic.open_float()
-```
-
-**Treesitter info:**
-```
-:TSInstallInfo
+1. Search with / or *
+2. cgn to change next match
+3. . to repeat for each occurrence
 ```
 
-**Plugin health:**
+**Quick substitute:**
 ```
-:checkhealth
-```
-
-### Learning Resources
-
-- **Vim tutorial**: Run `vimtutor` in terminal
-- **Neovim docs**: Press `<leader>fh` and search
-- **Which-key**: Press `<leader>` and wait to see available bindings
-- **Command history**: Press `q:` to browse command history
-
----
-
-## Summary of All Keybindings
-
-| Category | Key | Action |
-|----------|-----|--------|
-| **Telescope** | `<leader>ff` | Find files |
-| | `<leader>fg` | Live grep |
-| | `<leader>fb` | Buffers |
-| | `<leader>fh` | Help tags |
-| **LSP** | `gd` | Go to definition |
-| | `gr` | Go to references |
-| | `K` | Hover docs |
-| | `<leader>rn` | Rename |
-| | `<leader>ca` | Code action |
-| | `[d` | Previous diagnostic |
-| | `]d` | Next diagnostic |
-| | `<leader>f` | Format |
-| **Completion** | `<C-Space>` | Trigger completion |
-| | `<CR>` | Confirm |
-| | `<Tab>` | Next item |
-| | `<S-Tab>` | Previous item |
-| **Files** | `-` | Open Oil |
-| **Git** | `<leader>gg` | LazyGit |
-
----
-
-## Customization
-
-### Configuration Structure
-
-Configuration is split into **modular files**:
-
-1. **Plugin list** - `home/shared.nix` (lines 98-127) - Install plugins via Nix
-2. **Editor options** - `home/nvim/lua/config/options.lua`
-3. **Keymaps** - `home/nvim/lua/config/keymaps.lua`
-4. **Autocommands** - `home/nvim/lua/config/autocmds.lua`
-5. **Plugin configs** - `home/nvim/lua/plugins/*.lua` - Each plugin in its own file
-
-### Adding a New Plugin
-
-**Example: Adding nvim-autopairs**
-
-1. **Add to Nix** (`home/shared.nix`):
-   ```nix
-   plugins = with pkgs.vimPlugins; [
-     # ... existing plugins
-     nvim-autopairs
-   ];
-   ```
-
-2. **Create plugin file** (`home/nvim/lua/plugins/autopairs.lua`):
-   ```lua
-   return {
-     'windwp/nvim-autopairs',
-     event = 'InsertEnter',
-     opts = {},
-   }
-   ```
-
-3. **Rebuild**:
-   ```bash
-   darwin-rebuild switch --flake .#m4pro
-   ```
-
-4. **Restart Neovim** - Plugin auto-loads via lazy.nvim!
-
-### Modifying Existing Plugin
-
-Edit the corresponding file in `lua/plugins/` and restart Neovim.
-
-**Example:** Change Dracula to TokyoNight:
-
-Edit `lua/plugins/colorscheme.lua`:
-```lua
--- Change enabled flags:
-{
-  'Mofiqul/dracula.nvim',
-  enabled = false,  -- Disable Dracula
-  -- ...
-},
-{
-  'folke/tokyonight.nvim',
-  enabled = true,  -- Enable TokyoNight
-  -- ...
-}
+:%s/old/new/g     - Replace in whole file
+:s/old/new/g      - Replace in current line
+:'<,'>s/old/new/g - Replace in visual selection
 ```
 
-### Adding Keymaps
-
-Edit `lua/config/keymaps.lua`:
-```lua
-map('n', '<leader>x', '<cmd>MyCommand<CR>', { desc = 'My custom command' })
+**Jump list:**
+```
+<C-o> - Jump to previous location
+<C-i> - Jump to next location
 ```
 
-### Adding Autocommands
-
-Edit `lua/config/autocmds.lua`:
-```lua
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'python',
-  callback = function()
-    vim.opt_local.shiftwidth = 4
-  end,
-})
+**Marks:**
 ```
-
-**Safe to experiment** - Nix + version control make it easy to roll back!
+ma    - Set mark 'a'
+'a    - Jump to mark 'a'
+```
 
 ---
 
 ## Troubleshooting
 
-### LSP not starting
+### LSP Not Starting
 
-1. Check `:LspInfo` - is server installed?
-2. Verify package in `home/shared.nix`
-3. Check filetype: `:set ft?`
-4. Rebuild Nix config
+**Check LSP status:**
+```vim
+:LspInfo
+```
 
-### Completion not working
+**Verify server installed:**
+```bash
+which pyright  # Or ts_ls, ruff, etc.
+```
 
-1. Check if LSP is attached: `:LspInfo`
-2. Verify `cmp-nvim-lsp` plugin is installed
-3. Try manual trigger: `<C-Space>`
+**Check filetype detection:**
+```vim
+:set ft?
+```
 
-### Transparency not working
+**Solutions:**
+1. Verify LSP package in `home/core/languages.nix`
+2. Rebuild Nix config
+3. Check server is in PATH: `echo $PATH`
+4. Review `:checkhealth` output
 
-1. Check terminal supports transparency (Ghostty does)
-2. Verify `background-opacity` in `home/ghostty/config`
-3. Make sure colorscheme is loaded: `:colorscheme`
+### Completion Not Working
 
-### Colors look wrong
+**Symptoms:** No completion popup appears
 
-1. Ensure `termguicolors` is set: `:set termguicolors?`
-2. Try different colorscheme
-3. Check terminal supports 24-bit color
+**Checks:**
+1. `:LspInfo` - Is LSP attached?
+2. Try manual trigger: `<C-Space>`
+3. Check `:checkhealth` for cmp errors
 
-### Formatting errors or warnings
+**Solutions:**
+- Verify `cmp-nvim-lsp` plugin installed
+- Restart Neovim
+- Check LSP capabilities with `:lua =vim.lsp.get_clients()[1].server_capabilities`
 
-The none-ls plugin is configured with error handling for Neovim 0.11 compatibility. If you see warnings about none-ls, formatting still works for supported file types. Markdown files are excluded from none-ls to prevent compatibility issues.
+### Transparency Not Working
 
-If formatting doesn't work:
-1. Check the formatter is installed in `home/shared.nix`
-2. Use `<leader>f` to format manually
-3. Check `:LspInfo` to see active servers
+**Check terminal:**
+- Verify Ghostty has `background-opacity = 0.50`
+- Other terminals must support transparency
+
+**Check colorscheme:**
+```vim
+:colorscheme  " Should show 'dracula' or current theme
+```
+
+**Verify autocmd:**
+- Transparency set in `lua/config/autocmds.lua`
+- Autocmd runs on `ColorScheme` and `VimEnter` events
+
+### Colors Look Wrong
+
+**Check true color support:**
+```vim
+:set termguicolors?  " Should return 'termguicolors'
+```
+
+**Verify terminal:**
+- Terminal must support 24-bit color
+- Set `TERM=xterm-256color` or similar
+
+**Test:**
+```bash
+curl -s https://gist.githubusercontent.com/lifepillar/09a44b8cf0f9397465614e622979107f/raw/24-bit-color.sh | bash
+```
+
+### Neo-tree or Oil Not Opening
+
+**Neo-tree:**
+```vim
+:Neotree  " Try direct command
+:checkhealth neo-tree
+```
+
+**Oil:**
+```vim
+:Oil  " Try direct command
+```
+
+**Solutions:**
+- Verify plugins installed: `:checkhealth`
+- Check for Lua errors: `:messages`
+- Verify nui.nvim dependency installed
+
+### None-ls Errors
+
+**Check formatters installed:**
+```bash
+which black prettier stylua
+```
+
+**Verify none-ls:**
+```vim
+:checkhealth none-ls
+```
+
+**Common issues:**
+- Formatter not in PATH
+- Wrong builtin name
+- Tool not installed via Nix
+
+### Performance Issues
+
+**Check startup time:**
+```bash
+nvim --startuptime startup.log
+```
+
+**Profile:**
+```vim
+:profile start profile.log
+:profile func *
+:profile file *
+" Do some actions
+:profile stop
+```
+
+**Solutions:**
+- All plugins load directly (no lazy loading overhead)
+- Check for slow Lua requires
+- Verify Nix-installed plugins (faster than runtime downloads)
 
 ---
 
-**Last updated**: 2025-11-04
-**Configuration version**: Neovim 0.11+ with native LSP
+## Quick Reference Card
+
+### Essential Commands
+
+| Task | Keymap |
+|------|--------|
+| **File Navigation** |
+| Find file | `<leader>ff` |
+| Search text | `<leader>fg` |
+| Recent files | `<leader>fr` |
+| File tree | `<leader>e` |
+| File manager | `-` |
+| **LSP** |
+| Go to definition | `gd` |
+| Find references | `gr` |
+| Hover docs | `K` |
+| Rename | `<leader>rn` |
+| Code action | `<leader>ca` |
+| Format | `<leader>f` |
+| **Git** |
+| LazyGit | `<leader>gg` |
+| Stage hunk | `<leader>hs` |
+| Next hunk | `]c` |
+| **Utility** |
+| Save | `<leader>w` |
+| Quit | `<leader>q` |
+| Keybinding hints | `<leader>` (wait) |
+
+---
+
+**Configuration maintained with ❤️ via Nix**
+**Last updated:** 2025-11-04
