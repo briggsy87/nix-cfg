@@ -14,6 +14,9 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    shellAliases = {
+      nv = "nvim";
+    };
     initContent = ''
       # Add local bin to PATH for user scripts
       export PATH="$HOME/.local/bin:$PATH"

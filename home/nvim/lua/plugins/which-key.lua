@@ -1,51 +1,42 @@
-return {
-  'folke/which-key.nvim',
-  event = 'VeryLazy',
-  init = function()
-    vim.o.timeout = true
-    vim.o.timeoutlen = 300
-  end,
-  opts = {
-    plugins = {
-      marks = true,
-      registers = true,
-      spelling = {
-        enabled = true,
-        suggestions = 20,
-      },
-      presets = {
-        operators = false,
-        motions = false,
-        text_objects = false,
-        windows = true,
-        nav = true,
-        z = true,
-        g = true,
-      },
+-- Which-key for keybinding hints
+local wk = require('which-key')
+
+wk.setup({
+  plugins = {
+    marks = true,
+    registers = true,
+    spelling = {
+      enabled = true,
+      suggestions = 20,
     },
-    icons = {
-      breadcrumb = '»',
-      separator = '➜',
-      group = '+',
-    },
-    win = {
-      border = 'rounded',
-      padding = { 2, 2, 2, 2 },
+    presets = {
+      operators = false,
+      motions = false,
+      text_objects = false,
+      windows = true,
+      nav = true,
+      z = true,
+      g = true,
     },
   },
-  config = function(_, opts)
-    local wk = require('which-key')
-    wk.setup(opts)
+  icons = {
+    breadcrumb = '»',
+    separator = '➜',
+    group = '+',
+  },
+  win = {
+    border = 'rounded',
+    padding = { 2, 2, 2, 2 },
+  },
+})
 
-    -- Register group names
-    wk.add({
-      { '<leader>f', group = 'Find' },
-      { '<leader>g', group = 'Git' },
-      { '<leader>h', group = 'Hunk' },
-      { '<leader>b', group = 'Buffer' },
-      { '<leader>c', group = 'Code' },
-      { '<leader>r', group = 'Rename' },
-      { '<leader>e', desc = 'Explorer' },
-    })
-  end,
-}
+-- Register group names
+wk.add({
+  { '<leader>f', group = 'Find' },
+  { '<leader>g', group = 'Git' },
+  { '<leader>h', group = 'Hunk' },
+  { '<leader>b', group = 'Buffer' },
+  { '<leader>c', group = 'Code' },
+  { '<leader>r', group = 'Rename' },
+  { '<leader>e', desc = 'Explorer' },
+})

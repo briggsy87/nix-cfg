@@ -76,81 +76,6 @@
     claude-code
   ];
 
-  # Shell configuration
-  programs.zsh = {
-    enable = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-    shellAliases = {
-      nv = "nvim";
-    };
-    initContent = ''
-      eval "$(zoxide init zsh)"
-      eval "$(starship init zsh)"
-      export EDITOR=nvim
-    '';
-  };
-
-  # Neovim configuration
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    withNodeJs = true;
-    plugins = with pkgs.vimPlugins; [
-      # Plugin manager
-      lazy-nvim
-
-      # Essentials (lazy.nvim will manage these, but install via Nix for offline use)
-      plenary-nvim
-      telescope-nvim
-      telescope-ui-select-nvim
-      nvim-treesitter
-      none-ls-nvim
-      nvim-cmp
-      cmp-nvim-lsp
-      cmp-buffer
-      cmp-path
-      cmp_luasnip
-      luasnip
-      friendly-snippets
-      gitsigns-nvim
-      lazygit-nvim
-      oil-nvim
-      neo-tree-nvim
-      which-key-nvim
-      nvim-web-devicons
-      lualine-nvim
-      nui-nvim  # Required by neo-tree
-
-      # Colorschemes (dark/purple themes)
-      dracula-nvim
-      tokyonight-nvim
-      catppuccin-nvim
-      nightfox-nvim
-      kanagawa-nvim
-    ];
-  };
-
-  # Copy entire nvim directory structure (init.lua + lua/ directory)
-  xdg.configFile = {
-    "nvim/init.lua".source = ./nvim/init.lua;
-    "nvim/lua" = {
-      source = ./nvim/lua;
-      recursive = true;
-    };
-  };
-
-  # Starship prompt
-  programs.starship.enable = true;
-
-  # Direnv for automatic environment loading
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
   # SSH configuration
   programs.ssh = {
     enable = true;
@@ -168,25 +93,5 @@
         identitiesOnly = true;
       };
     };
-  };
-
-  # Git configuration
-  programs.git = {
-    enable = true;
-    settings = {
-	user.name = "Kyle Briggs";
-	user.email = "briggsy87@gmail.com";
-	init.defaultBranch = "main";
-        pull.rebase = true;
-	};
-    #delta.enable = true;
-    #extraConfig = {
-    #  init.defaultBranch = "main";
-    #  pull.rebase = true;
-    #};
-  };
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
   };
 }

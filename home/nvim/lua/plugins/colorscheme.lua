@@ -1,68 +1,22 @@
-return {
-  -- Dracula theme (active)
-  {
-    'Mofiqul/dracula.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('dracula').setup({
-        transparent_bg = true,
-        colors = {
-          bg = 'none',
-          bgdark = 'none',
-        },
-      })
-      vim.cmd('colorscheme dracula')
-    end,
+-- Colorscheme configuration
+-- Setup Dracula theme
+require('dracula').setup({
+  transparent_bg = true,
+  colors = {
+    bg = 'none',
+    bgdark = 'none',
   },
+})
 
-  -- Alternative themes (uncomment to use)
-  {
-    'folke/tokyonight.nvim',
-    enabled = false, -- Set to true to enable
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('tokyonight').setup({
-        style = 'moon',
-        transparent = true,
-      })
-      -- vim.cmd('colorscheme tokyonight-moon')
-    end,
-  },
+-- Load colorscheme
+vim.cmd('colorscheme dracula')
 
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    enabled = false, -- Set to true to enable
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('catppuccin').setup({
-        flavour = 'mocha',
-        transparent_background = true,
-      })
-      -- vim.cmd('colorscheme catppuccin-mocha')
-    end,
-  },
+-- Alternative colorschemes (comment out dracula above and uncomment one below to switch):
+-- require('tokyonight').setup({ style = 'moon', transparent = true })
+-- vim.cmd('colorscheme tokyonight-moon')
 
-  {
-    'EdenEast/nightfox.nvim',
-    enabled = false, -- Set to true to enable
-    lazy = false,
-    priority = 1000,
-    config = function()
-      -- vim.cmd('colorscheme carbonfox')
-    end,
-  },
+-- require('catppuccin').setup({ flavour = 'mocha', transparent_background = true })
+-- vim.cmd('colorscheme catppuccin-mocha')
 
-  {
-    'rebelot/kanagawa.nvim',
-    enabled = false, -- Set to true to enable
-    lazy = false,
-    priority = 1000,
-    config = function()
-      -- vim.cmd('colorscheme kanagawa')
-    end,
-  },
-}
+-- vim.cmd('colorscheme carbonfox')
+-- vim.cmd('colorscheme kanagawa')
