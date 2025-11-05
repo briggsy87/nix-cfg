@@ -96,7 +96,10 @@
     vimAlias = true;
     withNodeJs = true;
     plugins = with pkgs.vimPlugins; [
-      # Essentials
+      # Plugin manager
+      lazy-nvim
+
+      # Essentials (lazy.nvim will manage these, but install via Nix for offline use)
       plenary-nvim
       telescope-nvim
       nvim-treesitter
@@ -105,18 +108,21 @@
       cmp-nvim-lsp
       cmp-buffer
       cmp-path
+      cmp_luasnip
       luasnip
       friendly-snippets
       gitsigns-nvim
       lazygit-nvim
-      oil-nvim # minimal file manager in-buffer
+      oil-nvim
       which-key-nvim
+      nvim-web-devicons
 
       # Colorschemes (dark/purple themes)
-      tokyonight-nvim       # Active: Dark theme with purple accents (moon variant)
-      catppuccin-nvim       # Alternative: Mocha variant has purple tones
-      nightfox-nvim         # Alternative: Carbonfox has purple highlights
-      kanagawa-nvim         # Alternative: Dark theme with subtle purple
+      dracula-nvim
+      tokyonight-nvim
+      catppuccin-nvim
+      nightfox-nvim
+      kanagawa-nvim
     ];
     extraLuaConfig = builtins.readFile ./nvim/init.lua;
   };

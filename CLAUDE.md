@@ -83,19 +83,44 @@ All dotfiles are managed **declaratively** via `xdg.configFile`:
 
 ### Neovim Philosophy
 
-Neovim is configured purely through Nix:
-- Plugins declared in `home/shared.nix` using `pkgs.vimPlugins`
-- LSP servers, formatters, linters installed as Nix packages
-- Configuration in `home/nvim/init.lua` uses system-installed LSPs
-- **No Mason, no separate package manager** - everything through Nix
-- **Uses Neovim 0.11+ native LSP API** (no nvim-lspconfig dependency)
-- Stack: Telescope + Treesitter + Native LSP + nvim-cmp + none-ls + oil.nvim + gitsigns
-- **Transparency enabled** to match terminal (Ghostty 50% opacity)
-- **TokyoNight Moon theme** active with fallback chain and alternative purple/dark themes available
+Neovim uses a **modular, lazy-loaded architecture** managed through Nix + lazy.nvim:
 
-**📖 See `docs/vim.md` for comprehensive Neovim documentation including:**
+**Structure:**
+```
+home/nvim/
+├── init.lua                 # Bootstrap lazy.nvim
+├── lua/
+│   ├── config/             # Core configuration
+│   │   ├── options.lua     # Editor settings
+│   │   ├── keymaps.lua     # General keybindings
+│   │   └── autocmds.lua    # Autocommands (transparency, LSP)
+│   └── plugins/            # One file per plugin
+│       ├── colorscheme.lua
+│       ├── telescope.lua
+│       ├── treesitter.lua
+│       ├── lsp.lua
+│       ├── none-ls.lua     # Formatters/linters
+│       ├── completion.lua
+│       ├── oil.lua
+│       └── git.lua
+```
+
+**Key principles:**
+- **lazy.nvim** for plugin management and lazy loading
+- **Modular config** - each plugin in its own file for maintainability
+- **Nix-managed plugins** - all plugins installed via `pkgs.vimPlugins` (offline-first)
+- **Nix-managed tools** - LSP servers, formatters, linters as Nix packages
+- **Neovim 0.11+ native LSP API** (modern, no nvim-lspconfig dependency)
+- **none-ls.nvim** for external formatters/linters
+- **Transparency enabled** to match terminal (Ghostty 50% opacity)
+- **Dracula theme** active with alternative purple/dark themes available
+
+**Stack:** lazy.nvim + Telescope + Treesitter + Native LSP + nvim-cmp + none-ls + oil.nvim + gitsigns
+
+**📖 See `docs/vim.md` for comprehensive documentation:**
+- Modular configuration structure
 - Complete keybindings reference
-- Plugin usage guides
+- How to add/modify plugins
 - LSP configuration details
 - Workflows and tips
 

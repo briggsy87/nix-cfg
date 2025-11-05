@@ -1,41 +1,74 @@
 # Neovim Configuration Guide
 
-Complete documentation for the Nix-managed Neovim setup with LSP, Treesitter, and modern plugins.
+Complete documentation for the modular, Nix-managed Neovim setup with lazy.nvim, LSP, Treesitter, and modern plugins.
 
 ---
 
 ## Table of Contents
 
 1. [Philosophy & Architecture](#philosophy--architecture)
-2. [Leader Key](#leader-key)
-3. [Editor Settings](#editor-settings)
-4. [Colorschemes & Theming](#colorschemes--theming)
-5. [Plugins Overview](#plugins-overview)
-6. [Keybindings Reference](#keybindings-reference)
-7. [LSP (Language Server Protocol)](#lsp-language-server-protocol)
-8. [Code Completion](#code-completion)
-9. [Formatting & Linting](#formatting--linting)
-10. [File Navigation](#file-navigation)
-11. [Git Integration](#git-integration)
-12. [Tips & Workflows](#tips--workflows)
+2. [Configuration Structure](#configuration-structure)
+3. [Leader Key](#leader-key)
+4. [Editor Settings](#editor-settings)
+5. [Colorschemes & Theming](#colorschemes--theming)
+6. [Plugins Overview](#plugins-overview)
+7. [Keybindings Reference](#keybindings-reference)
+8. [LSP (Language Server Protocol)](#lsp-language-server-protocol)
+9. [Code Completion](#code-completion)
+10. [Formatting & Linting](#formatting--linting)
+11. [File Navigation](#file-navigation)
+12. [Git Integration](#git-integration)
+13. [Tips & Workflows](#tips--workflows)
 
 ---
 
 ## Philosophy & Architecture
 
-This Neovim configuration is **fully declarative** and managed through Nix:
+This Neovim configuration is **declarative, modular, and managed through Nix + lazy.nvim**:
 
-- **No package managers inside Neovim** (no Mason, no Packer, no lazy.nvim)
-- **All plugins** installed via `pkgs.vimPlugins` in `home/shared.nix`
+- **lazy.nvim** for fast, lazy-loaded plugin management
+- **Modular plugin configuration** - each plugin in its own file
+- **All plugins** installed via `pkgs.vimPlugins` in `home/shared.nix` (offline-first)
 - **All LSP servers, formatters, and linters** installed as Nix packages
-- **Configuration** in `home/nvim/init.lua` loaded via `extraLuaConfig`
-- **Uses Neovim 0.11+ native LSP API** (no nvim-lspconfig dependency)
+- **Uses Neovim 0.11+ native LSP API** for modern LSP configuration
+- **none-ls.nvim** for external formatters and linters
 
 **Benefits:**
+- Clean, maintainable, modular configuration
+- Fast startup with lazy loading
 - Reproducible across all machines
 - Version controlled and portable
-- No plugin conflicts or version mismatches
-- Works offline (no runtime downloads)
+- Works offline (plugins installed via Nix)
+
+---
+
+## Configuration Structure
+
+```
+home/nvim/
+├── init.lua                    # Entry point, bootstraps lazy.nvim
+├── lua/
+│   ├── config/
+│   │   ├── options.lua        # Editor options (line numbers, tabs, etc.)
+│   │   ├── keymaps.lua        # General keymaps
+│   │   └── autocmds.lua       # Autocommands (transparency, LSP attach)
+│   └── plugins/
+│       ├── colorscheme.lua    # Theme configuration
+│       ├── telescope.lua      # Fuzzy finder
+│       ├── treesitter.lua     # Syntax highlighting
+│       ├── lsp.lua            # LSP configuration
+│       ├── none-ls.lua        # Formatters/linters
+│       ├── completion.lua     # nvim-cmp setup
+│       ├── oil.lua            # File manager
+│       ├── git.lua            # Git integration
+│       └── which-key.lua      # Keybinding hints
+```
+
+**How it works:**
+1. `init.lua` bootstraps lazy.nvim and loads `config/` modules
+2. lazy.nvim auto-loads all files in `plugins/` directory
+3. Each plugin is configured independently
+4. Plugins are lazy-loaded for fast startup
 
 ---
 
@@ -69,26 +102,28 @@ Configured in `home/nvim/init.lua:4-12`:
 ## Colorschemes & Theming
 
 ### Active Theme
-**TokyoNight Moon** - Dark theme with purple accents and transparency support
+**Dracula** - Classic purple/pink dark theme with excellent contrast and transparency support
 
 ### Transparency
 Neovim is configured to respect terminal transparency (50% opacity from Ghostty config).
 All backgrounds are set to `none` so the terminal background shows through.
 
 The colorscheme loader automatically tries themes in this order:
-1. TokyoNight Moon (purple accents)
-2. Catppuccin Mocha (purple tones)
-3. Kanagawa (subtle purple)
-4. Carbonfox (purple highlights)
-5. Habamax (built-in fallback)
+1. Dracula (purple/pink classic)
+2. TokyoNight Moon (purple accents)
+3. Catppuccin Mocha (purple tones)
+4. Kanagawa (subtle purple)
+5. Carbonfox (purple highlights)
+6. Habamax (built-in fallback)
 
 ### Switching Themes
 
-Uncomment one of these lines in `home/nvim/init.lua:66-70` to override the default:
+Uncomment one of these lines in `home/nvim/init.lua:78-83` to override the default:
 
 ```lua
 -- Purple/Dark theme options:
--- vim.cmd('colorscheme tokyonight-moon')   -- Active default (purple accents)
+-- vim.cmd('colorscheme dracula')           -- Active default (purple/pink classic)
+-- vim.cmd('colorscheme tokyonight-moon')   -- Dark with purple accents
 -- vim.cmd('colorscheme catppuccin-mocha')  -- Purple-toned variant
 -- vim.cmd('colorscheme carbonfox')         -- Dark with purple highlights
 -- vim.cmd('colorscheme kanagawa')          -- Subtle purple/dark theme
@@ -101,9 +136,10 @@ darwin-rebuild switch --flake .#m4pro
 
 ### Available Colorscheme Plugins
 
-Installed in `home/shared.nix:116-119`:
+Installed in `home/shared.nix:116-120`:
 
-- **tokyonight-nvim** - Tokyo Night Moon variant (purple accents) - **Active**
+- **dracula-nvim** - Classic Dracula theme (purple/pink) - **Active**
+- **tokyonight-nvim** - Tokyo Night Moon variant (purple accents)
 - **catppuccin-nvim** - Catppuccin Mocha variant (purple tones)
 - **nightfox-nvim** - Nightfox family (Carbonfox has purple highlights)
 - **kanagawa-nvim** - Japanese-inspired dark theme with subtle purple
@@ -593,17 +629,85 @@ Future keybindings can be added for:
 
 ## Customization
 
-All configuration lives in **two places**:
+### Configuration Structure
 
-1. **Plugins** - `home/shared.nix` (lines 98-121)
-2. **Config** - `home/nvim/init.lua`
+Configuration is split into **modular files**:
 
-**To customize:**
-1. Edit the files
-2. Run: `darwin-rebuild switch --flake .#m4pro`
-3. Restart Neovim
+1. **Plugin list** - `home/shared.nix` (lines 98-127) - Install plugins via Nix
+2. **Editor options** - `home/nvim/lua/config/options.lua`
+3. **Keymaps** - `home/nvim/lua/config/keymaps.lua`
+4. **Autocommands** - `home/nvim/lua/config/autocmds.lua`
+5. **Plugin configs** - `home/nvim/lua/plugins/*.lua` - Each plugin in its own file
 
-**Safe to experiment** - Nix makes it easy to roll back if something breaks!
+### Adding a New Plugin
+
+**Example: Adding nvim-autopairs**
+
+1. **Add to Nix** (`home/shared.nix`):
+   ```nix
+   plugins = with pkgs.vimPlugins; [
+     # ... existing plugins
+     nvim-autopairs
+   ];
+   ```
+
+2. **Create plugin file** (`home/nvim/lua/plugins/autopairs.lua`):
+   ```lua
+   return {
+     'windwp/nvim-autopairs',
+     event = 'InsertEnter',
+     opts = {},
+   }
+   ```
+
+3. **Rebuild**:
+   ```bash
+   darwin-rebuild switch --flake .#m4pro
+   ```
+
+4. **Restart Neovim** - Plugin auto-loads via lazy.nvim!
+
+### Modifying Existing Plugin
+
+Edit the corresponding file in `lua/plugins/` and restart Neovim.
+
+**Example:** Change Dracula to TokyoNight:
+
+Edit `lua/plugins/colorscheme.lua`:
+```lua
+-- Change enabled flags:
+{
+  'Mofiqul/dracula.nvim',
+  enabled = false,  -- Disable Dracula
+  -- ...
+},
+{
+  'folke/tokyonight.nvim',
+  enabled = true,  -- Enable TokyoNight
+  -- ...
+}
+```
+
+### Adding Keymaps
+
+Edit `lua/config/keymaps.lua`:
+```lua
+map('n', '<leader>x', '<cmd>MyCommand<CR>', { desc = 'My custom command' })
+```
+
+### Adding Autocommands
+
+Edit `lua/config/autocmds.lua`:
+```lua
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'python',
+  callback = function()
+    vim.opt_local.shiftwidth = 4
+  end,
+})
+```
+
+**Safe to experiment** - Nix + version control make it easy to roll back!
 
 ---
 
@@ -633,6 +737,15 @@ All configuration lives in **two places**:
 1. Ensure `termguicolors` is set: `:set termguicolors?`
 2. Try different colorscheme
 3. Check terminal supports 24-bit color
+
+### Formatting errors or warnings
+
+The none-ls plugin is configured with error handling for Neovim 0.11 compatibility. If you see warnings about none-ls, formatting still works for supported file types. Markdown files are excluded from none-ls to prevent compatibility issues.
+
+If formatting doesn't work:
+1. Check the formatter is installed in `home/shared.nix`
+2. Use `<leader>f` to format manually
+3. Check `:LspInfo` to see active servers
 
 ---
 
