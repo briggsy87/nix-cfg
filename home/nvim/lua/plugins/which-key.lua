@@ -45,6 +45,7 @@ return {
       { '<leader>b', group = 'Buffer' },
       { '<leader>c', group = 'Code' },
       { '<leader>r', group = 'Rename' },
+      { '<leader>e', desc = 'Explorer' },
     })
   end,
 }

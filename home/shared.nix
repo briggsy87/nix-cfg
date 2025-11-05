@@ -81,6 +81,9 @@
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    shellAliases = {
+      nv = "nvim";
+    };
     initContent = ''
       eval "$(zoxide init zsh)"
       eval "$(starship init zsh)"
@@ -102,6 +105,7 @@
       # Essentials (lazy.nvim will manage these, but install via Nix for offline use)
       plenary-nvim
       telescope-nvim
+      telescope-ui-select-nvim
       nvim-treesitter
       none-ls-nvim
       nvim-cmp
@@ -114,8 +118,11 @@
       gitsigns-nvim
       lazygit-nvim
       oil-nvim
+      neo-tree-nvim
       which-key-nvim
       nvim-web-devicons
+      lualine-nvim
+      nui-nvim  # Required by neo-tree
 
       # Colorschemes (dark/purple themes)
       dracula-nvim
@@ -124,7 +131,15 @@
       nightfox-nvim
       kanagawa-nvim
     ];
-    extraLuaConfig = builtins.readFile ./nvim/init.lua;
+  };
+
+  # Copy entire nvim directory structure (init.lua + lua/ directory)
+  xdg.configFile = {
+    "nvim/init.lua".source = ./nvim/init.lua;
+    "nvim/lua" = {
+      source = ./nvim/lua;
+      recursive = true;
+    };
   };
 
   # Starship prompt

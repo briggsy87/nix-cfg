@@ -1,6 +1,9 @@
 return {
   'nvim-telescope/telescope.nvim',
-  dependencies = { 'nvim-lua/plenary.nvim' },
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope-ui-select.nvim',
+  },
   cmd = 'Telescope',
   keys = {
     { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find files' },
@@ -11,7 +14,10 @@ return {
     { '<leader>fc', '<cmd>Telescope commands<cr>', desc = 'Commands' },
     { '<leader>fk', '<cmd>Telescope keymaps<cr>', desc = 'Keymaps' },
   },
-  opts = {
+  config = function()
+    local telescope = require('telescope')
+
+    telescope.setup({
     defaults = {
       prompt_prefix = ' ',
       selection_caret = ' ',
@@ -38,5 +44,14 @@ return {
         },
       },
     },
-  },
+      extensions = {
+        ['ui-select'] = {
+          require('telescope.themes').get_dropdown({}),
+        },
+      },
+    })
+
+    -- Load telescope-ui-select extension
+    telescope.load_extension('ui-select')
+  end,
 }
