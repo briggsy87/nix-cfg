@@ -2,7 +2,7 @@
 
 Complete documentation for the modular, Nix-managed Neovim setup without lazy.nvim.
 
-**Last Updated:** 2025-11-04
+**Last Updated:** 2025-11-05
 **Neovim Version:** 0.11+
 **Configuration Type:** Modular, Nix-managed, Direct plugin loading
 
@@ -68,17 +68,21 @@ home/
 │       │   ├── keymaps.lua        # General keymaps (window nav, text movement)
 │       │   └── autocmds.lua       # Autocommands (transparency, LSP attach, etc.)
 │       └── plugins/
-│           ├── colorscheme.lua    # Dracula theme configuration
-│           ├── lualine.lua        # Status line
-│           ├── telescope.lua      # Fuzzy finder + keymaps
-│           ├── treesitter.lua     # Syntax highlighting
-│           ├── lsp.lua            # LSP server configuration (Neovim 0.11+ API)
-│           ├── none-ls.lua        # External formatters/linters
-│           ├── completion.lua     # nvim-cmp setup
-│           ├── oil.lua            # File manager (edit-as-buffer style)
-│           ├── neotree.lua        # Traditional file tree explorer
-│           ├── git.lua            # Gitsigns + LazyGit integration
-│           └── which-key.lua      # Keybinding hints
+│           ├── colorscheme.lua         # Dracula theme configuration
+│           ├── lualine.lua             # Status line
+│           ├── telescope.lua           # Fuzzy finder + keymaps
+│           ├── treesitter.lua          # Syntax highlighting
+│           ├── lsp.lua                 # LSP server configuration (Neovim 0.11+ API)
+│           ├── none-ls.lua             # External formatters/linters
+│           ├── completion.lua          # nvim-cmp setup
+│           ├── oil.lua                 # File manager (edit-as-buffer style)
+│           ├── neotree.lua             # Traditional file tree explorer
+│           ├── git.lua                 # Gitsigns + LazyGit integration
+│           ├── which-key.lua           # Keybinding hints
+│           ├── undotree.lua            # Undo history visualizer
+│           ├── vim-tmux-navigator.lua  # Seamless vim/tmux navigation
+│           ├── vimux.lua               # Tmux integration for running commands
+│           └── vim-test.lua            # Test runner (pytest, jest)
 ```
 
 ### How It Works
@@ -250,6 +254,22 @@ Then restart Neovim (no rebuild needed - Lua config is live).
 | **gitsigns.nvim** | Git diff markers in gutter | `plugins/git.lua` |
 | **lazygit.nvim** | LazyGit TUI integration | `plugins/git.lua` |
 
+### Editing Enhancements
+
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **vim-commentary** | Comment toggling with `gc` motion | N/A (works out of box) |
+| **undotree** | Undo history visualizer | `plugins/undotree.lua` |
+| **vim-surround** | Surround operations (`ys`, `cs`, `ds`) | N/A (works out of box) |
+| **vim-tmux-navigator** | Seamless vim/tmux navigation | `plugins/vim-tmux-navigator.lua` |
+
+### Testing & Tmux Integration
+
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **vimux** | Run commands in tmux panes from vim | `plugins/vimux.lua` |
+| **vim-test** | Test runner (pytest, jest) with tmux integration | `plugins/vim-test.lua` |
+
 ### Colorschemes
 
 | Plugin | Description |
@@ -274,12 +294,17 @@ Configured in `lua/config/keymaps.lua`:
 
 #### Window Navigation
 
+**Seamless vim/tmux navigation via vim-tmux-navigator:**
+
 | Key | Action |
 |-----|--------|
-| `<C-h>` | Go to left window |
-| `<C-j>` | Go to lower window |
-| `<C-k>` | Go to upper window |
-| `<C-l>` | Go to right window |
+| `<C-h>` | Go to left window/pane (vim or tmux) |
+| `<C-j>` | Go to lower window/pane (vim or tmux) |
+| `<C-k>` | Go to upper window/pane (vim or tmux) |
+| `<C-l>` | Go to right window/pane (vim or tmux) |
+| `<C-\>` | Go to previous window/pane |
+
+These keybindings work seamlessly across vim splits and tmux panes!
 
 #### Window Resizing
 
@@ -446,6 +471,93 @@ Configured in `lua/plugins/git.lua`:
 | `<leader>hd` | Diff this |
 | `<leader>hD` | Diff this ~ |
 | `ih` | Select hunk (text object) |
+
+### Editing Enhancements
+
+#### vim-commentary
+
+Comment toggling with motion support:
+
+| Key | Action |
+|-----|--------|
+| `gc{motion}` | Toggle comments for motion (e.g., `gcap` - comment paragraph) |
+| `gcc` | Toggle comment on current line |
+| `gc` (Visual) | Toggle comments on selection |
+
+**Examples:**
+- `gcc` - Comment current line
+- `gcap` - Comment paragraph
+- `gc3j` - Comment current line + 3 lines down
+- Select lines in visual mode, then `gc` - Comment selection
+
+#### vim-surround
+
+Surround text with quotes, brackets, tags, etc:
+
+| Key | Action |
+|-----|--------|
+| `ys{motion}{char}` | Add surrounding (e.g., `ysiw"` - surround word with quotes) |
+| `cs{old}{new}` | Change surrounding (e.g., `cs"'` - change " to ') |
+| `ds{char}` | Delete surrounding (e.g., `ds"` - remove quotes) |
+| `yss{char}` | Surround entire line |
+| `S{char}` (Visual) | Surround selection |
+
+**Examples:**
+- `ysiw"` - Surround current word with double quotes
+- `cs"'` - Change surrounding double quotes to single quotes
+- `ds{` - Delete surrounding curly braces
+- `yss)` - Surround entire line with parentheses
+- Select text, then `S<div>` - Surround with `<div></div>`
+
+#### Undotree
+
+| Key | Action |
+|-----|--------|
+| `<leader>u` | Toggle undo tree visualizer |
+
+**Inside Undotree:**
+- Navigate through undo history with `j/k`
+- Press `<Enter>` to restore to selected state
+- `q` to close
+
+### Testing & Tmux Integration
+
+#### vim-test
+
+Configured in `lua/plugins/vim-test.lua`:
+
+| Key | Action |
+|-----|--------|
+| `<leader>tn` | Run test nearest to cursor |
+| `<leader>tf` | Run all tests in current file |
+| `<leader>ts` | Run entire test suite |
+| `<leader>tl` | Run last test |
+| `<leader>tv` | Visit test file |
+
+**Supported frameworks:**
+- Python: `pytest` (with `-v` flag)
+- JavaScript/TypeScript: `jest` (with `--verbose` flag)
+
+Tests run in a tmux pane via vimux integration.
+
+#### Vimux
+
+Run commands in tmux pane from vim:
+
+| Key | Action |
+|-----|--------|
+| `<leader>vp` | Prompt for command to run |
+| `<leader>vl` | Run last command |
+| `<leader>vi` | Inspect runner pane |
+| `<leader>vz` | Zoom runner pane |
+| `<leader>vc` | Interrupt running command |
+| `<leader>vq` | Close runner pane |
+
+**Usage example:**
+1. Press `<leader>vp` to prompt for command
+2. Type command (e.g., `python script.py`)
+3. Press `<leader>vl` to re-run the same command
+4. Use `<leader>vz` to zoom the tmux pane
 
 ### Standard Vim Motions
 
@@ -1157,10 +1269,143 @@ nvim --startuptime startup.log
 | LazyGit | `<leader>gg` |
 | Stage hunk | `<leader>hs` |
 | Next hunk | `]c` |
+| **Testing** |
+| Run test nearest | `<leader>tn` |
+| Run test file | `<leader>tf` |
+| Run last test | `<leader>tl` |
+| **Editing** |
+| Comment line | `gcc` |
+| Surround word | `ysiw"` |
+| Undo tree | `<leader>u` |
 | **Utility** |
 | Save | `<leader>w` |
 | Quit | `<leader>q` |
 | Keybinding hints | `<leader>` (wait) |
+
+---
+
+## Tmux Integration
+
+Your Neovim setup is deeply integrated with tmux for a powerful terminal workflow.
+
+### Tmux Configuration
+
+**Location:** `home/core/tmux.nix` (Nix-managed, no TPM needed)
+
+**Key features:**
+- ✅ **Dracula theme** with status bar at top
+- ✅ **Vi keybindings** throughout
+- ✅ **Seamless vim/tmux navigation** (C-hjkl works across both)
+- ✅ **Nix-managed plugins** (sensible, yank, vim-tmux-navigator)
+- ✅ **Catppuccin theme** available as backup (commented out)
+
+### Tmux Keybindings
+
+**Prefix:** `C-a` (Ctrl-a)
+
+#### Essential Commands
+
+| Key | Action |
+|-----|--------|
+| `C-a` | Prefix key |
+| `C-a \|` | Split window vertically |
+| `C-a -` | Split window horizontally |
+| `C-a h/j/k/l` | Navigate panes (with prefix) |
+| `C-h/j/k/l` | Navigate panes (seamless vim/tmux) |
+| `C-a H/J/K/L` | Resize pane (hold prefix, repeat H/J/K/L) |
+| `C-a s` | Session manager |
+| `C-a r` | Reload config |
+| `C-a [` | Enter copy mode (vi keys) |
+
+#### Copy Mode (Vi Keys)
+
+| Key | Action |
+|-----|--------|
+| `C-a [` | Enter copy mode |
+| `v` | Begin selection |
+| `y` | Copy selection to clipboard |
+| `q` / `Esc` | Exit copy mode |
+
+#### Window Management
+
+| Key | Action |
+|-----|--------|
+| `C-a c` | Create new window |
+| `C-a n` | Next window |
+| `C-a p` | Previous window |
+| `C-a 0-9` | Switch to window number |
+| `C-a ,` | Rename window |
+
+### Seamless Vim/Tmux Navigation
+
+With vim-tmux-navigator, these keys work identically whether you're in a vim split or tmux pane:
+
+- `C-h` - Move left
+- `C-j` - Move down
+- `C-k` - Move up
+- `C-l` - Move right
+- `C-\` - Move to previous
+
+**No need to think about whether you're in vim or tmux!**
+
+### Vimux Integration
+
+Run commands in a tmux pane from within Neovim:
+
+1. Open Neovim in tmux
+2. Press `<leader>vp` to prompt for a command
+3. Type your command (e.g., `pytest tests/`)
+4. The command runs in a tmux pane
+5. Press `<leader>vl` to re-run the last command
+
+**Use case:** Run tests, build scripts, or any CLI command without leaving Neovim.
+
+### vim-test Integration
+
+Tests automatically run in tmux panes via vimux:
+
+1. Open a test file in Neovim (in tmux)
+2. Press `<leader>tn` to run the test nearest to cursor
+3. Tests run in a tmux pane below
+4. See results without leaving Neovim
+5. Press `<leader>tl` to re-run the last test
+
+**Supported:**
+- Python: `pytest -v`
+- JavaScript/TypeScript: `jest --verbose`
+
+### Tmux + Neovim Workflow
+
+**Typical session layout:**
+
+```
+┌─────────────────────────────────────┐
+│ tmux status bar (top, Dracula)     │
+├─────────────────────────────────────┤
+│                                     │
+│   Neovim (main editor)             │
+│                                     │
+├─────────────────────────────────────┤
+│   Test output / Command runner     │
+│   (vimux pane)                      │
+└─────────────────────────────────────┘
+```
+
+**Workflow:**
+1. Edit code in Neovim (top pane)
+2. Run tests with `<leader>tn`
+3. See results in bottom pane (vimux)
+4. Navigate between panes with `C-j/k`
+5. Fix issues, re-run with `<leader>tl`
+
+### Switching Tmux Theme
+
+To use Catppuccin instead of Dracula:
+
+1. Edit `home/core/tmux.nix`
+2. Comment out the Dracula plugin block
+3. Uncomment the Catppuccin plugin block
+4. Rebuild: `darwin-rebuild switch --flake .#m4pro`
 
 ---
 

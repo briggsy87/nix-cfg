@@ -15,11 +15,11 @@
     ripgrep
     fd
     fzf
-    bat
     eza
     zoxide
     jq
     yq-go
+    tldr
 
     # Git tools
     git
@@ -75,6 +75,15 @@
     
     claude-code
   ];
+
+  # bat (cat with syntax highlighting) - Dracula theme
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "Dracula";
+      style = "numbers,changes,header";
+    };
+  };
 
   # SSH configuration
   programs.ssh = {

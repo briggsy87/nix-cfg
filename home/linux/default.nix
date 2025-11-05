@@ -17,7 +17,7 @@
     ghostty
 
     # Terminal multiplexer
-    tmux
+    # Note: tmux configured via programs.tmux in home/core/tmux.nix
 
     # Linux-specific container runtime
     docker-compose
@@ -43,7 +43,7 @@
     "alacritty/alacritty.toml".text = builtins.readFile ../alacritty.toml;
     "ghostty/config".text = builtins.readFile ../ghostty/config-linux;
     "kitty/kitty.conf".text = builtins.readFile ../kitty.conf;
-    "tmux/tmux.conf".source = ../tmux/tmux.conf;
+    # Note: tmux.conf managed by programs.tmux in home/core/tmux.nix
     "ranger/rc.conf".text = builtins.readFile ../ranger/rc.conf;
   };
 

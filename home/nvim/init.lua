@@ -20,3 +20,12 @@ require('plugins.oil')
 require('plugins.neotree')
 require('plugins.git')
 require('plugins.which-key')
+
+-- Editing enhancements
+require('plugins.undotree')
+require('plugins.vim-tmux-navigator')
+-- Note: vim-commentary and vim-surround work out of box, no config needed
+
+-- Testing & tmux integration
+require('plugins.vimux')
+require('plugins.vim-test')

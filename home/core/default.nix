@@ -7,6 +7,7 @@
     ./terminal.nix
     ./languages.nix
     ./neovim.nix
+    ./tmux.nix
     ./email.nix
   ];
 

@@ -31,6 +31,16 @@
       lualine-nvim
       nui-nvim  # Required by neo-tree
 
+      # Editing enhancements
+      vim-commentary       # Comment toggling with gc
+      undotree             # Undo history visualizer
+      vim-surround         # Surround operations (ys, cs, ds)
+      vim-tmux-navigator   # Seamless vim/tmux navigation
+
+      # Testing & tmux integration
+      vimux                # Tmux integration
+      vim-test             # Test runner
+
       # Colorschemes (dark/purple themes)
       dracula-nvim
       tokyonight-nvim

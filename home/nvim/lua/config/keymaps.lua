@@ -4,11 +4,8 @@
 
 local map = vim.keymap.set
 
--- Better window navigation
-map('n', '<C-h>', '<C-w>h', { desc = 'Go to left window' })
-map('n', '<C-j>', '<C-w>j', { desc = 'Go to lower window' })
-map('n', '<C-k>', '<C-w>k', { desc = 'Go to upper window' })
-map('n', '<C-l>', '<C-w>l', { desc = 'Go to right window' })
+-- Note: Window navigation (C-hjkl) handled by vim-tmux-navigator
+-- See lua/plugins/vim-tmux-navigator.lua for configuration
 
 -- Resize windows
 map('n', '<C-Up>', ':resize +2<CR>', { desc = 'Increase window height' })

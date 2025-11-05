@@ -39,4 +39,7 @@ wk.add({
   { '<leader>c', group = 'Code' },
   { '<leader>r', group = 'Rename' },
   { '<leader>e', desc = 'Explorer' },
+  { '<leader>u', desc = 'Undotree' },
+  { '<leader>t', group = 'Test' },
+  { '<leader>v', group = 'Vimux' },
 })

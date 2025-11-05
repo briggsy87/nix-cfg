@@ -12,7 +12,7 @@
     alacritty
 
     # Terminal multiplexers
-    tmux
+    # Note: tmux configured via programs.tmux in home/core/tmux.nix
     zellij
 
     # macOS-specific container runtime
@@ -37,10 +37,7 @@
       text = builtins.readFile ../alacritty.toml;
       force = true;
     };
-    "tmux/tmux.conf" = {
-      source = ../tmux/tmux.conf;
-      force = true;
-    };
+    # Note: tmux.conf managed by programs.tmux in home/core/tmux.nix
     "zellij/config.kdl" = {
       source = ../zellij/config.kdl;
       force = true;
