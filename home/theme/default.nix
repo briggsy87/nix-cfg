@@ -55,9 +55,10 @@ in
     # Platform-specific target overrides
     targets = {
       # Cross-platform targets (enabled by default)
-      neovim.enable = true;
-      bat.enable = true;
+      neovim.enable = false;  # Using manual Dracula theme in neovim
+      bat.enable = false;      # Using manual Dracula theme in bat
       fzf.enable = true;
+      tmux.enable = false;     # Using manual Dracula theme in tmux
 
       # Darwin-specific
       alacritty.enable = isDarwin;

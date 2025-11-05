@@ -24,8 +24,12 @@ require('plugins.which-key')
 -- Editing enhancements
 require('plugins.undotree')
 require('plugins.vim-tmux-navigator')
+require('plugins.vim-visual-multi')
 -- Note: vim-commentary and vim-surround work out of box, no config needed
 
 -- Testing & tmux integration
 require('plugins.vimux')
 require('plugins.vim-test')
+
+-- Markdown
+require('plugins.markdown-preview')

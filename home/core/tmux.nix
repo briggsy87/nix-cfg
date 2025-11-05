@@ -18,26 +18,20 @@
         plugin = dracula;
         extraConfig = ''
           # Dracula theme configuration
-          # Status bar modules (right side)
-          set -g @dracula-show-battery true
-          set -g @dracula-show-network false
-          set -g @dracula-show-weather true
-          set -g @dracula-show-location false  # Hide location for privacy (was showing "redacted")
+          # Explicitly control which plugins show (this prevents network/"redacted" from showing)
+          set -g @dracula-plugins "battery weather time"
+
+          # Weather settings
           set -g @dracula-show-fahrenheit false  # Use Celsius instead of Fahrenheit
           set -g @dracula-fixed-location "Toronto"  # Set your Canadian city
+          set -g @dracula-show-location false  # Don't show location name
 
           # Time settings
-          set -g @dracula-show-time true
           set -g @dracula-military-time true  # 24-hour format
           set -g @dracula-day-month true  # Show day/month
 
           # Left side icon
           set -g @dracula-show-left-icon session
-
-          # Optional: Customize colors
-          set -g @dracula-cpu-usage false
-          set -g @dracula-ram-usage false
-          set -g @dracula-gpu-usage false
         '';
       }
 
@@ -71,6 +65,9 @@
     ];
 
     extraConfig = ''
+      # Ensure zsh loads properly
+      set -g default-command "${pkgs.zsh}/bin/zsh"
+
       # Status bar at top
       set-option -g status-position top
 

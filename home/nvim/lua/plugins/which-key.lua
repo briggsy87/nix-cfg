@@ -42,4 +42,5 @@ wk.add({
   { '<leader>u', desc = 'Undotree' },
   { '<leader>t', group = 'Test' },
   { '<leader>v', group = 'Vimux' },
+  { '<leader>m', group = 'Markdown' },
 })

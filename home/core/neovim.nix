@@ -36,10 +36,14 @@
       undotree             # Undo history visualizer
       vim-surround         # Surround operations (ys, cs, ds)
       vim-tmux-navigator   # Seamless vim/tmux navigation
+      vim-visual-multi     # Multiple cursors
 
       # Testing & tmux integration
       vimux                # Tmux integration
       vim-test             # Test runner
+
+      # Markdown
+      markdown-preview-nvim  # Markdown preview in browser
 
       # Colorschemes (dark/purple themes)
       dracula-nvim

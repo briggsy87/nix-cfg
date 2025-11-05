@@ -81,8 +81,10 @@ home/
 │           ├── which-key.lua           # Keybinding hints
 │           ├── undotree.lua            # Undo history visualizer
 │           ├── vim-tmux-navigator.lua  # Seamless vim/tmux navigation
+│           ├── vim-visual-multi.lua    # Multiple cursors support
 │           ├── vimux.lua               # Tmux integration for running commands
-│           └── vim-test.lua            # Test runner (pytest, jest)
+│           ├── vim-test.lua            # Test runner (pytest, jest)
+│           └── markdown-preview.lua    # Live markdown preview in browser
 ```
 
 ### How It Works
@@ -262,6 +264,7 @@ Then restart Neovim (no rebuild needed - Lua config is live).
 | **undotree** | Undo history visualizer | `plugins/undotree.lua` |
 | **vim-surround** | Surround operations (`ys`, `cs`, `ds`) | N/A (works out of box) |
 | **vim-tmux-navigator** | Seamless vim/tmux navigation | `plugins/vim-tmux-navigator.lua` |
+| **vim-visual-multi** | Multiple cursors support | `plugins/vim-visual-multi.lua` |
 
 ### Testing & Tmux Integration
 
@@ -269,6 +272,12 @@ Then restart Neovim (no rebuild needed - Lua config is live).
 |--------|---------|-------------|
 | **vimux** | Run commands in tmux panes from vim | `plugins/vimux.lua` |
 | **vim-test** | Test runner (pytest, jest) with tmux integration | `plugins/vim-test.lua` |
+
+### Markdown
+
+| Plugin | Purpose | Config File |
+|--------|---------|-------------|
+| **markdown-preview.nvim** | Live markdown preview in browser | `plugins/markdown-preview.lua` |
 
 ### Colorschemes
 
@@ -558,6 +567,61 @@ Run commands in tmux pane from vim:
 2. Type command (e.g., `python script.py`)
 3. Press `<leader>vl` to re-run the same command
 4. Use `<leader>vz` to zoom the tmux pane
+
+### Multiple Cursors (vim-visual-multi)
+
+Edit multiple locations simultaneously:
+
+| Key | Action |
+|-----|--------|
+| `C-n` | Start multi-cursor on word / Select next occurrence |
+| `C-Down` | Create cursor below |
+| `C-Up` | Create cursor above |
+| `n` | Get next occurrence |
+| `N` | Get previous occurrence |
+| `q` | Skip current and get next occurrence |
+| `Q` | Remove current cursor/selection |
+| `[` | Select previous cursor |
+| `]` | Select next cursor |
+| `Tab` | Switch between cursor and extend mode |
+| `Esc` | Exit multi-cursor mode |
+
+**Examples:**
+1. **Select all occurrences of a word:**
+   - Place cursor on word
+   - Press `C-n` multiple times to select each occurrence
+   - Edit all at once
+
+2. **Create multiple cursors:**
+   - Press `C-n` on a word to start
+   - Press `C-n` again to add next occurrence
+   - Or use `C-Down/C-Up` to add cursors above/below
+
+3. **Skip an occurrence:**
+   - Press `q` to skip current selection and jump to next
+
+### Markdown Preview
+
+Live preview markdown files in browser:
+
+| Key | Action |
+|-----|--------|
+| `<leader>mp` | Start markdown preview |
+| `<leader>ms` | Stop markdown preview |
+| `<leader>mt` | Toggle markdown preview |
+
+**Features:**
+- Live updates as you type (no need to save)
+- Dark theme (matches Dracula aesthetic)
+- Automatically opens in your default browser
+- Server runs on localhost:8765
+- Only works in markdown files (`.md`)
+
+**Usage:**
+1. Open a markdown file (`*.md`)
+2. Press `<leader>mp` to start preview
+3. Edit the file - preview updates live
+4. Press `<leader>ms` to stop when done
 
 ### Standard Vim Motions
 
@@ -1277,6 +1341,10 @@ nvim --startuptime startup.log
 | Comment line | `gcc` |
 | Surround word | `ysiw"` |
 | Undo tree | `<leader>u` |
+| Multiple cursors | `C-n` |
+| **Markdown** |
+| Preview markdown | `<leader>mp` |
+| Stop preview | `<leader>ms` |
 | **Utility** |
 | Save | `<leader>w` |
 | Quit | `<leader>q` |
