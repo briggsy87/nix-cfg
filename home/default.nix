@@ -15,6 +15,9 @@ in
     # Theme system (cross-platform)
     ./theme
 
+    # Shared packages and configs (cross-platform)
+    ./shared.nix
+
     # Core modules (cross-platform)
     ./core
 

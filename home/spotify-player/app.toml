@@ -1,0 +1,73 @@
+# spotify-player configuration
+# Documentation: https://github.com/aome510/spotify-player
+
+# Theme
+theme = "Dracula"
+
+# Client settings
+[client_id_command]
+command = "echo 65b708073fc0480ea92a077233ca87bd"
+args = []
+
+[playback_format]
+normal = "{{track}} • {{artists}}"
+
+# Player settings
+[player]
+# Use Spotify Connect (requires Spotify Premium)
+# Or use librespot for local playback
+backend = "spotify_connect"  # Options: "spotify_connect", "librespot"
+
+# UI settings
+[ui]
+# Show cover art in terminal
+cover_img_scale = 1.0
+cover_img_width = 5
+playback_text_width = 20
+
+# Keybindings (vi-style by default)
+[keybindings]
+# Navigation
+"k" = "previous"
+"j" = "next"
+"h" = "left"
+"l" = "right"
+"g" = "top"
+"G" = "bottom"
+
+# Playback
+"space" = "play_pause"
+"n" = "next_track"
+"p" = "previous_track"
+"+" = "volume_up"
+"-" = "volume_down"
+"m" = "mute"
+
+# Other
+"/" = "search"
+"q" = "quit"
+"?" = "help"
+"r" = "refresh"
+"s" = "shuffle"
+"l" = "repeat"
+
+# Search and browse
+"1" = "browse_playlists"
+"2" = "browse_saved_albums"
+"3" = "browse_saved_tracks"
+"4" = "browse_artists"
+"5" = "browse_podcasts"
+
+# Theme configuration
+[theme.palette]
+background = "#282a36"
+foreground = "#f8f8f2"
+selection_background = "#44475a"
+selection_foreground = "#f8f8f2"
+cyan = "#8be9fd"
+green = "#50fa7b"
+orange = "#ffb86c"
+pink = "#ff79c6"
+purple = "#bd93f9"
+red = "#ff5555"
+yellow = "#f1fa8c"

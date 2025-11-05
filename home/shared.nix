@@ -25,7 +25,7 @@
     git
     git-lfs
     lazygit
-    gitui
+    # gitui  # Temporarily disabled - build fails on ARM macOS
     delta
 
     # TUI & workflow
@@ -36,6 +36,7 @@
     btop
     glow
     lazydocker
+    spotify-player  # Spotify TUI client
 
     # Crypto & secrets
     gnupg
@@ -85,16 +86,32 @@
     };
   };
 
+  # spotify-player configuration
+  xdg.configFile."spotify-player/app.toml" = {
+    source = ./spotify-player/app.toml;
+  };
+
   # SSH configuration
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;  # Disable default config to avoid future deprecation warnings
     matchBlocks = {
+      # Default settings for all hosts
+      "*" = {
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+        compression = true;
+      };
+
+      # Work GitHub (using w.github.com alias)
       "work" = {
-        host = "w.github.com-w";
+        host = "w.github.com";
         hostname = "github.com";
-        identityFile = "~/.ssh/id_rsa";
+        identityFile = "~/.ssh/id_ed25519";
         identitiesOnly = true;
       };
+
+      # Personal GitHub (using p.github.com alias)
       "personal" = {
         host = "p.github.com";
         hostname = "github.com";

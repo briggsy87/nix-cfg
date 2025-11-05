@@ -1,15 +1,16 @@
-# Neovim Configuration Guide
+# Terminal Tools Guide
 
-Complete documentation for the modular, Nix-managed Neovim setup without lazy.nvim.
+Complete documentation for your Nix-managed terminal development environment: Neovim, Tmux, CLI tools, and more.
 
 **Last Updated:** 2025-11-05
-**Neovim Version:** 0.11+
-**Configuration Type:** Modular, Nix-managed, Direct plugin loading
+**System:** macOS (nix-darwin) + NixOS
+**Configuration Type:** Declarative, Nix-managed, Reproducible
 
 ---
 
 ## Table of Contents
 
+### Neovim
 1. [Philosophy & Architecture](#philosophy--architecture)
 2. [Configuration Structure](#configuration-structure)
 3. [Quick Start](#quick-start)
@@ -1459,6 +1460,204 @@ Tmux has full clipboard integration via the tmux-yank plugin.
 | `C-a 0-9` | Switch to window number |
 | `C-a ,` | Rename window |
 
+---
+
+## Tmux Complete Cheat Sheet
+
+### Starting & Stopping Tmux
+
+| Command | Action |
+|---------|--------|
+| `tmux` | Start new session |
+| `tmux new -s <name>` | Start new session with name |
+| `tmux ls` | List all sessions |
+| `tmux attach` | Attach to last session |
+| `tmux attach -t <name>` | Attach to named session |
+| `tmux kill-session -t <name>` | Kill named session |
+| `tmux kill-server` | Kill all sessions |
+
+### Session Management (Inside Tmux)
+
+| Key | Action |
+|-----|--------|
+| `C-a d` | Detach from session (session continues running) |
+| `C-a s` | Interactive session list/switcher |
+| `C-a $` | Rename current session |
+| `C-a (` | Switch to previous session |
+| `C-a )` | Switch to next session |
+
+### Window Management
+
+| Key | Action |
+|-----|--------|
+| `C-a c` | Create new window |
+| `C-a ,` | Rename current window |
+| `C-a w` | List all windows (interactive) |
+| `C-a n` | Next window |
+| `C-a p` | Previous window |
+| `C-a 0-9` | Switch to window by number |
+| `C-a l` | Switch to last used window |
+| `C-a &` | Kill current window (with confirmation) |
+| `C-a f` | Find window by name |
+
+### Pane Management
+
+| Key | Action |
+|-----|--------|
+| `C-a \|` | Split pane vertically (left/right) |
+| `C-a -` | Split pane horizontally (top/bottom) |
+| `C-a h/j/k/l` | Navigate to pane (with prefix) |
+| `C-h/j/k/l` | Navigate panes (seamless with vim) |
+| `C-a o` | Cycle through panes |
+| `C-a ;` | Jump to last active pane |
+| `C-a q` | Show pane numbers (type number to switch) |
+| `C-a x` | Kill current pane (with confirmation) |
+| `C-a !` | Convert pane to window |
+| `C-a z` | Toggle pane zoom (full screen) |
+| `C-a {` | Move pane left |
+| `C-a }` | Move pane right |
+| `C-a Space` | Cycle through pane layouts |
+
+### Pane Resizing
+
+| Key | Action |
+|-----|--------|
+| `C-a H` | Resize left (repeat H while holding prefix) |
+| `C-a J` | Resize down |
+| `C-a K` | Resize up |
+| `C-a L` | Resize right |
+| `C-a C-Up/Down/Left/Right` | Resize with arrow keys |
+
+### Copy Mode & Scrolling
+
+| Key | Action |
+|-----|--------|
+| `C-a [` | Enter copy mode (scroll mode) |
+| `h/j/k/l` | Navigate in copy mode (vi keys) |
+| `C-u / C-d` | Scroll half page up/down |
+| `g / G` | Go to top/bottom |
+| `/` | Search forward |
+| `?` | Search backward |
+| `n` | Next search result |
+| `N` | Previous search result |
+| `v` | Start selection (visual mode) |
+| `V` | Start line selection |
+| `C-v` | Start rectangle selection |
+| `y` | Copy selection to clipboard and exit |
+| `Enter` | Copy selection to clipboard and exit |
+| `q / Esc` | Exit copy mode |
+
+### Common Workflows
+
+**Creating a Development Layout:**
+```bash
+# Start tmux
+tmux new -s dev
+
+# Split into 3 panes
+C-a |          # Split vertically
+C-a -          # Split right pane horizontally
+
+# Result:
+# ┌─────────┬─────────┐
+# │         │         │
+# │  Editor │  Shell  │
+# │         ├─────────┤
+# │         │  Logs   │
+# └─────────┴─────────┘
+```
+
+**Working Across Multiple Projects:**
+```bash
+# Create sessions for each project
+tmux new -s project1
+C-a d                    # Detach
+
+tmux new -s project2
+C-a d                    # Detach
+
+# Switch between them
+tmux attach -t project1
+tmux attach -t project2
+
+# Or use C-a s to see interactive list
+```
+
+**Copying Text:**
+```bash
+# Method 1: Vi-style
+C-a [           # Enter copy mode
+/pattern        # Search for text
+n               # Jump to next match
+v               # Start selection
+jjj             # Extend selection
+y               # Copy and exit
+
+# Method 2: Mouse
+Just select with mouse - automatically copies!
+
+# Paste
+Cmd+V (macOS) or Ctrl+V (Linux)
+```
+
+**Detach & Reattach:**
+```bash
+# Inside tmux
+C-a d           # Detach (session keeps running)
+
+# Later, from terminal
+tmux attach     # Reattach to session
+
+# Everything is still there - windows, panes, processes!
+```
+
+**Kill Stuck Pane:**
+```bash
+C-a x           # Kill current pane (asks confirmation)
+# or
+C-a q           # Show pane numbers
+C-a : kill-pane -t 2    # Kill pane 2
+```
+
+### Tips & Tricks
+
+**1. Tmux Persists Across Terminal Restarts**
+- Close your terminal app - tmux sessions keep running!
+- Reopen terminal, run `tmux attach` - everything's still there
+
+**2. Mouse Support**
+- Enabled by default in this config
+- Click to switch panes
+- Click and drag to resize panes
+- Select text with mouse to copy
+
+**3. Zoom a Pane**
+- `C-a z` - Make current pane full screen
+- Work in it
+- `C-a z` again - Restore layout
+
+**4. Renaming is Your Friend**
+```bash
+C-a ,           # Rename window to something meaningful
+C-a $           # Rename session to project name
+```
+
+**5. Quick Pane Creation**
+```bash
+# Create 4-pane layout quickly
+C-a |  C-a -  C-a h  C-a -
+```
+
+**6. Scrollback Search**
+```bash
+C-a [           # Enter copy mode
+/error          # Search for "error"
+n n n           # Jump through matches
+q               # Exit when done
+```
+
+---
+
 ### Seamless Vim/Tmux Navigation
 
 With vim-tmux-navigator, these keys work identically whether you're in a vim split or tmux pane:
@@ -1532,5 +1731,224 @@ To use Catppuccin instead of Dracula:
 
 ---
 
+## Spotify TUI (spotify-player)
+
+Control Spotify from your terminal with a beautiful TUI.
+
+### First Time Setup
+
+**Prerequisites:**
+- Spotify Premium account (required for playback control)
+- Spotify app installed and logged in on your machine
+
+**Initial Authentication:**
+
+1. Start spotify-player:
+```bash
+spotify-player
+```
+
+2. On first run, you'll see authentication instructions
+3. Follow the prompts to authenticate with Spotify
+4. Credentials are saved to `~/.config/spotify-player/`
+
+### Features
+
+- ✅ **Full playback control** - Play, pause, skip, seek
+- ✅ **Browse library** - Playlists, albums, artists, podcasts
+- ✅ **Search** - Find any track, album, or artist
+- ✅ **Queue management** - Add tracks, reorder, clear
+- ✅ **Vi keybindings** - Navigate like vim
+- ✅ **Dracula theme** - Matches your terminal aesthetic
+- ✅ **Album art** - Shows cover art in terminal
+- ✅ **Device selection** - Control playback on any device
+
+### Keybindings
+
+#### Navigation
+
+| Key | Action |
+|-----|--------|
+| `j` / `Down` | Next item |
+| `k` / `Up` | Previous item |
+| `h` / `Left` | Go back / Collapse |
+| `l` / `Right` / `Enter` | Select / Expand |
+| `g` | Go to top |
+| `G` | Go to bottom |
+| `Tab` | Switch focus between panels |
+
+#### Playback Control
+
+| Key | Action |
+|-----|--------|
+| `Space` | Play / Pause |
+| `n` | Next track |
+| `p` | Previous track |
+| `+` / `=` | Volume up |
+| `-` / `_` | Volume down |
+| `m` | Mute / Unmute |
+| `s` | Toggle shuffle |
+| `r` | Cycle repeat mode (off → track → context) |
+| `.` | Seek forward 5 seconds |
+| `,` | Seek backward 5 seconds |
+
+#### Library & Search
+
+| Key | Action |
+|-----|--------|
+| `/` | Search |
+| `1` | Browse playlists |
+| `2` | Browse saved albums |
+| `3` | Browse saved tracks (liked songs) |
+| `4` | Browse artists |
+| `5` | Browse podcasts |
+
+#### Queue Management
+
+| Key | Action |
+|-----|--------|
+| `a` | Add track to queue |
+| `A` | Add album/playlist to queue |
+| `d` | Delete track from queue |
+| `D` | Clear queue |
+
+#### Other
+
+| Key | Action |
+|-----|--------|
+| `?` | Show help (all keybindings) |
+| `q` | Quit |
+| `R` | Refresh / Reload |
+| `i` | Show track/album info |
+| `o` | Show queue |
+| `O` | Show playback devices |
+| `x` | Like/unlike current track |
+
+### Common Workflows
+
+**Playing Music:**
+```bash
+# Start spotify-player
+spotify-player
+
+# Navigate to playlists
+Press 1
+
+# Use j/k to navigate, Enter to select
+# Press Space to play/pause
+# Press n for next track
+```
+
+**Searching for Music:**
+```bash
+# Inside spotify-player
+Press /
+Type: artist name or song
+Press Enter
+
+# Navigate results with j/k
+# Press Enter to play
+# Press a to add to queue
+```
+
+**Managing Queue:**
+```bash
+# Show current queue
+Press o
+
+# Add track to queue
+Navigate to track, press a
+
+# Clear queue
+Press D
+```
+
+**Controlling Other Devices:**
+```bash
+# Show available devices
+Press O
+
+# Select device to control
+Use j/k to navigate, Enter to select
+
+# Control playback on that device
+# Works with phones, speakers, etc!
+```
+
+### Tips & Tricks
+
+**1. Use as Background Player**
+- spotify-player connects to Spotify web API
+- You can control the official Spotify app
+- Or let it play independently
+
+**2. Terminal-Only Mode**
+- Close Spotify app completely
+- spotify-player will handle playback
+- Perfect for terminal-only workflows!
+
+**3. Quick Track Info**
+```bash
+Press i        # Show detailed track info
+Press x        # Like/unlike track
+Press a        # Add to queue
+```
+
+**4. Device Switching**
+- Press `O` to see all devices
+- Switch playback between:
+  - Your Mac
+  - Phone
+  - Speakers
+  - Other computers
+
+**5. Search Shortcuts**
+```bash
+/spotify:playlist:<id>    # Search for specific playlist
+/album:<name>             # Search albums only
+/artist:<name>            # Search artists only
+```
+
+### Configuration
+
+**Location:** `~/.config/spotify-player/app.toml`
+
+**Key settings:**
+- Theme: Dracula (matches your terminal)
+- Keybindings: Vi-style by default
+- Backend: `spotify_connect` (requires Premium)
+
+**To customize:**
+1. Edit `home/spotify-player/app.toml` in your nix-config
+2. Rebuild: `darwin-rebuild switch --flake .#m4pro`
+3. Restart spotify-player
+
+### Troubleshooting
+
+**Authentication Issues:**
+```bash
+# Clear saved credentials
+rm -rf ~/.config/spotify-player/credentials.json
+
+# Re-authenticate
+spotify-player
+```
+
+**No Audio / Can't Control:**
+- Verify Spotify Premium is active
+- Check that Spotify app is logged in
+- Try restarting spotify-player
+
+**Can't See Devices:**
+```bash
+# Make sure Spotify app is running
+# Or use other Spotify-enabled devices
+
+# Refresh device list
+Press R
+```
+
+---
+
 **Configuration maintained with ❤️ via Nix**
-**Last updated:** 2025-11-04
+**Last updated:** 2025-11-05
