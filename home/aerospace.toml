@@ -24,6 +24,22 @@ outer.bottom = 8
 outer.top = 8
 outer.right = 8
 
+# Multi-monitor workspace assignments
+# Uncomment when you have 3 monitors set up and want to pin workspaces to specific monitors
+# Monitor IDs: 1 = primary/built-in, 2 = first external, 3 = second external
+# To find your monitor IDs: aerospace list-monitors
+#
+# [workspace-to-monitor-force-assignment]
+# 1 = 1    # Browser on monitor 1 (primary/built-in)
+# 2 = 1    # Terminal on monitor 1 (primary/built-in)
+# 3 = 1    # General on monitor 1 (primary/built-in)
+# 4 = 2    # Code editor on monitor 2 (first external)
+# 5 = 2    # General on monitor 2 (first external)
+# 6 = 2    # General on monitor 2 (first external)
+# 7 = 3    # General on monitor 3 (second external)
+# 8 = 3    # Communication on monitor 3 (second external)
+# 9 = 3    # General on monitor 3 (second external)
+
 # Workspace assignments
 # Browsers on workspace 1
 [[on-window-detected]]
@@ -141,6 +157,14 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
+
+# Multi-monitor: Move workspace to another monitor
+alt-ctrl-left = 'move-workspace-to-monitor --wrap-around prev'
+alt-ctrl-right = 'move-workspace-to-monitor --wrap-around next'
+
+# Multi-monitor: Move focused window to another monitor
+alt-shift-left = 'move-node-to-monitor --wrap-around prev'
+alt-shift-right = 'move-node-to-monitor --wrap-around next'
 
 # Service mode for config management (alt+shift+semicolon then r to reload)
 alt-shift-semicolon = 'mode service'

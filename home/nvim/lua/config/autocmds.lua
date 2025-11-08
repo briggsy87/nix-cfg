@@ -36,6 +36,57 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Auto-resolve symlinks with visual indicator
+-- This ensures all symlinks to the same file open the same buffer,
+-- while showing you when a file was accessed via symlink
+vim.api.nvim_create_autocmd('BufReadPost', {
+  callback = function(args)
+    local bufpath = vim.api.nvim_buf_get_name(args.buf)
+
+    -- Skip if buffer is empty or special
+    if bufpath == '' or vim.bo[args.buf].buftype ~= '' then
+      return
+    end
+
+    -- Check if path is a symlink and resolve it
+    local realpath = vim.fn.resolve(bufpath)
+
+    -- If it's a symlink (resolved path differs), switch to real file
+    if realpath ~= bufpath and vim.fn.filereadable(realpath) == 1 then
+      -- Store the symlink path for reference
+      local symlink_path = bufpath
+
+      -- Change buffer name to the real path (keeps same buffer, changes path)
+      vim.api.nvim_buf_set_name(args.buf, realpath)
+
+      -- Force reload the buffer content from the real file
+      vim.cmd('silent! edit!')
+
+      -- Store symlink info in buffer variable
+      vim.b[args.buf].is_symlink_target = true
+      vim.b[args.buf].symlink_path = symlink_path
+
+      -- Show subtle notification (single line, no Press ENTER prompt)
+      vim.notify(
+        string.format('🔗 %s → %s',
+          vim.fn.fnamemodify(symlink_path, ':~:.'),
+          vim.fn.fnamemodify(realpath, ':~:.')
+        ),
+        vim.log.levels.INFO
+      )
+
+      -- Add a namespace for our symlink indicators
+      local ns = vim.api.nvim_create_namespace('symlink_indicator')
+
+      -- Add extmark at top of file as visual indicator
+      vim.api.nvim_buf_set_extmark(args.buf, ns, 0, 0, {
+        virt_text = {{ '🔗 symlink', 'Comment' }},
+        virt_text_pos = 'right_align',
+      })
+    end
+  end,
+})
+
 -- Close certain filetypes with 'q'
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {

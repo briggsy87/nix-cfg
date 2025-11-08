@@ -1,29 +1,35 @@
 # spotify-player configuration
-# Documentation: https://github.com/aome510/spotify-player
+# Documentation: https://github.com/aome510/spotify-player/blob/master/examples/app.toml
 
-# Theme
-theme = "Dracula"
+# Theme - use built-in Dracula theme
+theme = "dracula"
 
-# Client settings
-[client_id_command]
-command = "echo 65b708073fc0480ea92a077233ca87bd"
-args = []
+# Client ID - your Spotify app client ID
+client_id = "65b708073fc0480ea92a077233ca87bd"
 
-[playback_format]
-normal = "{{track}} • {{artists}}"
+# Playback display format
+playback_format = "{track} • {artists}"
 
-# Player settings
-[player]
-# Use Spotify Connect (requires Spotify Premium)
-# Or use librespot for local playback
-backend = "spotify_connect"  # Options: "spotify_connect", "librespot"
+# Enable local streaming - play audio directly through this terminal
+enable_streaming = "Always"
+default_device = "spotify-player"
 
-# UI settings
-[ui]
-# Show cover art in terminal
+# Media control
+enable_media_control = true
+enable_notify = false
+
+# Device configuration (required for local streaming)
+[device]
+name = "spotify-player"
+device_type = "speaker"
+volume = 70
+bitrate = 160
+audio_cache = true
+normalization = false
+
+# Cover image settings
 cover_img_scale = 1.0
 cover_img_width = 5
-playback_text_width = 20
 
 # Keybindings (vi-style by default)
 [keybindings]
@@ -47,9 +53,9 @@ playback_text_width = 20
 "/" = "search"
 "q" = "quit"
 "?" = "help"
-"r" = "refresh"
+"r" = "repeat"
 "s" = "shuffle"
-"l" = "repeat"
+"R" = "refresh"
 
 # Search and browse
 "1" = "browse_playlists"
@@ -57,17 +63,3 @@ playback_text_width = 20
 "3" = "browse_saved_tracks"
 "4" = "browse_artists"
 "5" = "browse_podcasts"
-
-# Theme configuration
-[theme.palette]
-background = "#282a36"
-foreground = "#f8f8f2"
-selection_background = "#44475a"
-selection_foreground = "#f8f8f2"
-cyan = "#8be9fd"
-green = "#50fa7b"
-orange = "#ffb86c"
-pink = "#ff79c6"
-purple = "#bd93f9"
-red = "#ff5555"
-yellow = "#f1fa8c"

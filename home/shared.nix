@@ -36,7 +36,7 @@
     btop
     glow
     lazydocker
-    spotify-player  # Spotify TUI client
+    #spotify-player  # Spotify TUI client
 
     # Crypto & secrets
     gnupg
@@ -75,6 +75,7 @@
     #(nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     
     claude-code
+    wally-cli
   ];
 
   # bat (cat with syntax highlighting) - Dracula theme
