@@ -71,6 +71,21 @@
       # Status bar at top
       set-option -g status-position top
 
+      # Session management with sesh
+      # Sesh will search these directories for projects (space-separated)
+      # It also auto-discovers tmuxinator configs
+      bind-key "f" run-shell "sesh connect \"$(
+        sesh list -i | fzf-tmux -p 55%,60% \
+          --no-sort --border-label ' sesh ' --prompt '⚡  ' \
+          --header '  ^a all ^t tmux ^x zoxide ^d tmux kill ^f find' \
+          --bind 'tab:down,btab:up' \
+          --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
+          --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
+          --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
+          --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+          --bind 'ctrl-d:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
+      )\""
+
       # Unbind default prefix
       unbind C-b
       bind C-a send-prefix

@@ -38,6 +38,10 @@
     lazydocker
     #spotify-player  # Spotify TUI client
 
+    # Tmux session management
+    sesh              # Modern tmux session manager (Rust, fast, tmuxinator-aware)
+    tmuxinator        # Declarative tmux session templates
+
     # Crypto & secrets
     gnupg
     age
@@ -91,6 +95,80 @@
   xdg.configFile."spotify-player/app.toml" = {
     source = ./spotify-player/app.toml;
   };
+
+  # sesh configuration (tmux session manager)
+  xdg.configFile."sesh/sesh.toml".text = ''
+    # Default session name when creating new sessions
+    default_session_name = "main"
+
+    # Startup script to run when creating a new session (optional)
+    # startup_script = "~/.config/sesh/startup.sh"
+
+    # Session search paths - sesh will look for projects in these directories
+    # It searches one level deep by default
+    [[session_configs]]
+    name = "code"
+    path = "~/code"
+    search_depth = 2
+
+    [[session_configs]]
+    name = "projects"
+    path = "~/projects"
+    search_depth = 2
+
+    [[session_configs]]
+    name = "work"
+    path = "~/work"
+    search_depth = 2
+  '';
+
+  # Tmuxinator example configuration
+  # Create your own in ~/.config/tmuxinator/
+  # Start with: tmuxinator start example (or just: mux example)
+  xdg.configFile."tmuxinator/example.yml".text = ''
+    # Example tmuxinator configuration
+    # Copy this file and customize for your projects
+    # Usage: tmuxinator start example
+    # Or create alias: alias mux='tmuxinator start'
+
+    name: example
+    root: ~/code
+
+    # Optional: Run on project start, always
+    # on_project_start: npm install
+
+    # Optional: Run on project stop
+    # on_project_stop: docker-compose down
+
+    # Runs before everything. Use it to start daemons etc.
+    # pre: docker-compose up -d
+
+    # Runs after everything. Use it to attach to session
+    # post: tmux select-window -t 1
+
+    # Project startup windows
+    windows:
+      - editor:
+          layout: main-vertical
+          panes:
+            - nvim
+            - # empty pane for terminal commands
+
+      - server:
+          # You can specify layout (even, main-vertical, main-horizontal, tiled)
+          layout: even-horizontal
+          panes:
+            - npm run dev
+            - # logs or secondary process
+
+      - git:
+          panes:
+            - lazygit
+
+      - docker:
+          panes:
+            - lazydocker
+  '';
 
   # SSH configuration
   programs.ssh = {
