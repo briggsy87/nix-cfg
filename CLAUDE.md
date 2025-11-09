@@ -290,3 +290,14 @@ To add support for a new platform (e.g., `nixos-wsl`):
 1. Add new platform-specific module in `home/`
 2. Update `home/default.nix` import logic
 3. Add hosts with new platform type in `flake.nix`
+
+### Documentation Resources
+
+Detailed setup guides for tools requiring manual configuration:
+
+- **`docs/neomutt-setup.md`**: Email client setup (personal account)
+- **`docs/neomutt-work-oauth-setup.md`**: Work email with OAuth2
+- **`docs/task-management-setup.md`**: JiraTUI and Todoist CLI setup
+- **`docs/terminal-tools.md`**: Comprehensive Neovim, Tmux, and CLI tools guide
+
+**Post-install steps** documented in `README.md` under "Post-Install Steps" section.

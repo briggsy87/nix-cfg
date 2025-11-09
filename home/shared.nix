@@ -42,6 +42,10 @@
     sesh              # Modern tmux session manager (Rust, fast, tmuxinator-aware)
     tmuxinator        # Declarative tmux session templates
 
+    # Task & project management
+    jiratui           # TUI for Atlassian Jira
+    todoist           # CLI for Todoist
+
     # Crypto & secrets
     gnupg
     age
@@ -131,11 +135,9 @@
     # Usage: tmuxinator start example
     # Or create alias: alias mux='tmuxinator start'
 
-    name: example
-    root: ~/code
+    name: Workstation
+    root: ~/code/nix-cfg
 
-    # Optional: Run on project start, always
-    # on_project_start: npm install
 
     # Optional: Run on project stop
     # on_project_stop: docker-compose down
@@ -152,22 +154,97 @@
           layout: main-vertical
           panes:
             - nvim
-            - # empty pane for terminal commands
 
-      - server:
+      - claude:
           # You can specify layout (even, main-vertical, main-horizontal, tiled)
           layout: even-horizontal
           panes:
-            - npm run dev
-            - # logs or secondary process
+            - claude
 
-      - git:
+      - terminal:
           panes:
-            - lazygit
+            - #
 
-      - docker:
+      - email:
           panes:
-            - lazydocker
+            - neomutt
+  '';
+
+  # JiraTUI configuration template
+  # Copy ~/.config/jiratui/config.yaml.template to config.yaml and fill in your credentials
+  xdg.configFile."jiratui/config.yaml.template".text = ''
+    # JiraTUI Configuration
+    # Copy this file to config.yaml and fill in your actual values
+    # See: https://jiratui.readthedocs.io/en/latest/users/configuration/
+
+    # ===== REQUIRED SETTINGS =====
+    # You MUST fill these in for jiratui to work
+
+    # Your Jira email address
+    jira_api_username: 'your.email@company.com'
+
+    # Your Jira API token
+    # Generate at: https://id.atlassian.com/manage-profile/security/api-tokens
+    jira_api_token: 'your-api-token-here'
+
+    # Your Jira instance URL
+    jira_api_base_url: 'https://your-company.atlassian.net'
+
+    # ===== OPTIONAL SETTINGS =====
+    # Sensible defaults provided - customize as needed
+
+    # Base URL for building web links (usually same as api_base_url without /rest/api/*)
+    jira_base_url: 'https://your-company.atlassian.net'
+
+    # Your Jira account ID (auto-selects you in dropdowns)
+    # Find it at: https://your-company.atlassian.net/rest/api/3/myself
+    # jira_account_id: 'your-account-id-here'
+
+    # Search & Display Settings
+    search_results_per_page: 50
+    search_issues_default_day_interval: 30  # Days to search when no criteria given
+    show_issue_web_links: true
+    search_results_truncate_work_item_summary: 80  # Truncate long summaries
+    search_results_style_work_item_status: true
+    search_results_style_work_item_type: true
+    search_on_startup: false  # Set to true to auto-search on launch
+
+    # Performance
+    on_start_up_only_fetch_projects: true  # Faster startup
+
+    # User Interface
+    confirm_before_quit: false
+    theme: 'dracula'  # Options: textual-dark, textual-light, monokai, dracula, etc.
+    tui_title_include_jira_server_title: true
+
+    # Filtering
+    search_results_page_filtering_enabled: true
+    search_results_page_filtering_minimum_term_length: 3
+    full_text_search_minimum_term_length: 3
+    enable_advanced_full_text_search: true
+
+    # Authentication
+    cloud: true  # Set to false if using Jira Data Center (on-premise)
+    use_bearer_authentication: false  # Most users should keep this false
+
+    # Logging (useful for debugging)
+    # log_file: '~/.local/share/jiratui/jiratui.log'
+    # log_level: 'INFO'  # Options: DEBUG, INFO, WARNING, ERROR
+
+    # Predefined JQL queries (customize for your workflow)
+    # pre_defined_jql_expressions:
+    #   1:
+    #     name: "My Open Issues"
+    #     expression: "assignee = currentUser() AND status != Done ORDER BY updated DESC"
+    #   2:
+    #     name: "Recent Updates"
+    #     expression: "updated >= -7d ORDER BY updated DESC"
+    #   3:
+    #     name: "In Progress"
+    #     expression: "assignee = currentUser() AND status = 'In Progress' ORDER BY priority DESC"
+
+    # Default JQL expression to use on work items search (use ID from above)
+    # jql_expression_id_for_work_items_search: 1
   '';
 
   # SSH configuration
