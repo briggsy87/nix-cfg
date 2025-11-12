@@ -19,7 +19,7 @@
     zoxide
     jq
     yq-go
-    tldr
+    tree
 
     # Git tools
     git
@@ -45,6 +45,13 @@
     # Task & project management
     jiratui           # TUI for Atlassian Jira
     todoist           # CLI for Todoist
+
+    # Productivity & utilities
+    tealdeer          # Fast tldr client (Rust implementation)
+    navi              # Interactive cheatsheet tool
+    hygg              # Fast grep with gitignore support
+    posting           # HTTP client TUI (Postman alternative)
+    oxker             # Docker container manager TUI
 
     # Crypto & secrets
     gnupg

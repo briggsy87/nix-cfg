@@ -26,6 +26,12 @@
     htop
     pciutils
     usbutils
+    below             # Resource monitor (Meta/Facebook)
+
+    # Productivity tools (Linux-only)
+    smassh            # Typing practice TUI
+    gophertube        # YouTube TUI client
+    superfile         # Modern file manager TUI
 
     # Development
     vscode
@@ -36,6 +42,12 @@
     # Additional Wayland tools
     wl-clipboard
     xdg-utils
+
+    #multimedia
+    spotify-player
+
+    #office suite
+    libreoffice
   ];
 
   # Linux dotfiles
