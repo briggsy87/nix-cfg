@@ -49,7 +49,6 @@
     # Productivity & utilities
     tealdeer          # Fast tldr client (Rust implementation)
     navi              # Interactive cheatsheet tool
-    hygg              # Fast grep with gitignore support
     posting           # HTTP client TUI (Postman alternative)
     oxker             # Docker container manager TUI
 

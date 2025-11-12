@@ -32,6 +32,7 @@
     smassh            # Typing practice TUI
     gophertube        # YouTube TUI client
     superfile         # Modern file manager TUI
+    hygg              # Fast grep with gitignore support
 
     # Development
     vscode
