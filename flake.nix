@@ -30,11 +30,13 @@
           system = "aarch64-darwin";
           username = "kyle.briggs";
           platform = "darwin";
+          profile = "work";  # work or personal (defaults to personal if not set)
         };
         thinkpad = {
           system = "x86_64-linux";
           username = "briggsy";
           platform = "nixos";
+          profile = "personal";
         };
       };
 
@@ -42,6 +44,7 @@
       mkSystem = hostname: config:
         let
           inherit (config) system username platform;
+          profile = config.profile or "personal";  # Default to personal if not specified
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
@@ -58,7 +61,7 @@
               #inputs.mac-app-util.homeManagerModules.default
             ];
             home-manager.users.${username} = import ./home {
-              inherit platform username;
+              inherit platform username profile;
             };
           };
         in

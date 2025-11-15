@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, userInfo, ... }:
 
 {
   home.packages = with pkgs; [
@@ -13,8 +13,8 @@
   programs.git = {
     enable = true;
     settings = {
-      user.name = "Kyle Briggs";
-      user.email = "briggsy87@gmail.com";
+      user.name = userInfo.name;
+      user.email = userInfo.email.primary;
       init.defaultBranch = "main";
       pull.rebase = true;
     };

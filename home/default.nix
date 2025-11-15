@@ -1,4 +1,4 @@
-{ platform, username }:
+{ platform, username, profile }:
 { config, pkgs, lib, ... }:
 
 let
@@ -9,6 +9,19 @@ let
   homeDir = if isDarwin
     then "/Users/" + username
     else "/home/" + username;
+
+  # User identity configuration based on profile
+  userInfo = {
+    name = "Kyle Briggs";
+    email = {
+      personal = "briggsy87@gmail.com";
+      work = "kyle.briggs@prenuvo.com";
+      # Primary email selected based on profile
+      primary = if profile == "work"
+        then "kyle.briggs@prenuvo.com"
+        else "briggsy87@gmail.com";
+    };
+  };
 in
 {
   imports = [
@@ -24,6 +37,11 @@ in
     # Platform-specific modules
     (if isDarwin then ./darwin else ./linux)
   ];
+
+  # Make profile and userInfo available to all imported modules
+  _module.args = {
+    inherit profile userInfo;
+  };
 
   # Set home-manager user info
   home.username = lib.mkDefault username;
