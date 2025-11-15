@@ -90,6 +90,13 @@
     
     claude-code
     wally-cli
+
+    #RemoteManagement
+    remmina
+
+    #Networking/Security
+    rustscan
+
   ];
 
   # bat (cat with syntax highlighting) - Dracula theme
@@ -135,15 +142,9 @@
   # Tmuxinator example configuration
   # Create your own in ~/.config/tmuxinator/
   # Start with: tmuxinator start example (or just: mux example)
-  xdg.configFile."tmuxinator/example.yml".text = ''
-    # Example tmuxinator configuration
-    # Copy this file and customize for your projects
-    # Usage: tmuxinator start example
-    # Or create alias: alias mux='tmuxinator start'
-
+  xdg.configFile."tmuxinator/nix-cfg.yml".text = ''
     name: Workstation
     root: ~/code/nix-cfg
-
 
     # Optional: Run on project stop
     # on_project_stop: docker-compose down
@@ -157,23 +158,28 @@
     # Project startup windows
     windows:
       - editor:
-          layout: main-vertical
           panes:
             - nvim
-
-      - claude:
-          # You can specify layout (even, main-vertical, main-horizontal, tiled)
-          layout: even-horizontal
-          panes:
-            - claude
-
-      - terminal:
+      - shell:
           panes:
             - #
+  '';
 
-      - email:
+  xdg.configFile."tmuxinator/lazy-todoist-dev.yml".text = ''
+    name: LazyTodoistDev
+    root: ~/code/lazytodoist
+
+    # Project startup windows
+    windows:
+      - editor:
           panes:
-            - neomutt
+            - nvim
+      - claude:
+          panes:
+            - claude
+      - shell:
+          panes:
+            - nix develop 
   '';
 
   # JiraTUI configuration template

@@ -27,6 +27,9 @@
     pciutils
     usbutils
     below             # Resource monitor (Meta/Facebook)
+    
+    #TODO: custom package build
+    #pvetui
 
     # Productivity tools (Linux-only)
     smassh            # Typing practice TUI
