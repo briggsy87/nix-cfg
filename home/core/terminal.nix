@@ -11,6 +11,11 @@
     jq
     yq-go
 
+    # Archive tools (for yazi and file managers)
+    p7zip         # 7zip support
+    unzip         # ZIP archives
+    unrar         # RAR archives
+
     # TUI applications
     yazi          # File manager
     ranger        # File manager
@@ -62,4 +67,8 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+  # Yazi - file manager with Dracula theme
+  xdg.configFile."yazi/yazi.toml".source = ../yazi/yazi.toml;
+  xdg.configFile."yazi/theme.toml".source = ../yazi/theme.toml;
 }

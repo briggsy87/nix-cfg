@@ -1,0 +1,137 @@
+# Dracula theme for yazi
+# Based on https://draculatheme.com/contribute
+
+[flavor]
+use = ""
+
+# Manager
+[manager]
+cwd = { fg = "#8be9fd", bold = true }
+
+# Hovered
+hovered         = { reversed = true }
+preview_hovered = { underline = true }
+
+# Find
+find_keyword  = { fg = "#f1fa8c", bold = true, italic = true, underline = true }
+find_position = { fg = "#ff79c6", bg = "reset", bold = true, italic = true }
+
+# Marker
+marker_copied   = { fg = "#50fa7b", bg = "#50fa7b" }
+marker_cut      = { fg = "#ff5555", bg = "#ff5555" }
+marker_marked   = { fg = "#8be9fd", bg = "#8be9fd" }
+marker_selected = { fg = "#f1fa8c", bg = "#f1fa8c" }
+
+# Tab
+tab_active   = { reversed = true }
+tab_inactive = {}
+tab_width    = 1
+
+# Count
+count_copied   = { fg = "#282a36", bg = "#50fa7b" }
+count_cut      = { fg = "#282a36", bg = "#ff5555" }
+count_selected = { fg = "#282a36", bg = "#f1fa8c" }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#6272a4" }
+
+# Highlighting
+syntect_theme = "~/.config/yazi/Dracula.tmTheme"
+
+# Status
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#44475a", bg = "#44475a" }
+
+# Mode
+mode_normal = { fg = "#282a36", bg = "#8be9fd", bold = true }
+mode_select = { fg = "#282a36", bg = "#50fa7b", bold = true }
+mode_unset  = { fg = "#282a36", bg = "#ffb86c", bold = true }
+
+# Progress
+progress_label  = { fg = "#f8f8f2", bold = true }
+progress_normal = { fg = "#8be9fd", bg = "#44475a" }
+progress_error  = { fg = "#ff5555", bg = "#44475a" }
+
+# Permissions
+permissions_t = { fg = "#50fa7b" }
+permissions_r = { fg = "#f1fa8c" }
+permissions_w = { fg = "#ff5555" }
+permissions_x = { fg = "#8be9fd" }
+permissions_s = { fg = "#6272a4" }
+
+# Input
+[input]
+border   = { fg = "#8be9fd" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+# Select
+[select]
+border   = { fg = "#8be9fd" }
+active   = { fg = "#ff79c6", bold = true }
+inactive = {}
+
+# Tasks
+[tasks]
+border  = { fg = "#8be9fd" }
+title   = {}
+hovered = { fg = "#ff79c6", underline = true }
+
+# Which
+[which]
+cols = 3
+mask            = { bg = "#282a36" }
+cand            = { fg = "#8be9fd" }
+rest            = { fg = "#6272a4" }
+desc            = { fg = "#ff79c6" }
+separator       = "  "
+separator_style = { fg = "#44475a" }
+
+# Help
+[help]
+on      = { fg = "#50fa7b" }
+run     = { fg = "#ff79c6" }
+hovered = { reversed = true }
+footer  = { fg = "#44475a", bg = "#f8f8f2" }
+
+# Notify
+[notify]
+title_info  = { fg = "#8be9fd" }
+title_warn  = { fg = "#f1fa8c" }
+title_error = { fg = "#ff5555" }
+
+icon_info  = ""
+icon_warn  = ""
+icon_error = ""
+
+# File-specific styles
+[filetype]
+
+rules = [
+  # Images
+  { mime = "image/*", fg = "#ff79c6" },
+
+  # Media
+  { mime = "video/*", fg = "#ffb86c" },
+  { mime = "audio/*", fg = "#f1fa8c" },
+
+  # Archives
+  { mime = "application/zip",             fg = "#bd93f9" },
+  { mime = "application/gzip",            fg = "#bd93f9" },
+  { mime = "application/x-tar",           fg = "#bd93f9" },
+  { mime = "application/x-bzip",          fg = "#bd93f9" },
+  { mime = "application/x-bzip2",         fg = "#bd93f9" },
+  { mime = "application/x-7z-compressed", fg = "#bd93f9" },
+  { mime = "application/x-rar",           fg = "#bd93f9" },
+
+  # Documents
+  { mime = "application/pdf", fg = "#ff5555" },
+
+  # Fallback
+  { name = "*", fg = "#f8f8f2" },
+  { name = "*/", fg = "#8be9fd" },
+]

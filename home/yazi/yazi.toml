@@ -1,0 +1,41 @@
+[manager]
+layout         = [1, 4, 3]
+sort_by        = "alphabetical"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "size"
+show_hidden    = false
+show_symlink   = true
+
+[preview]
+tab_size   = 2
+max_width  = 600
+max_height = 900
+cache_dir  = ""
+
+[opener]
+# Archive extraction
+extract = [
+  { run = '7z x "$@"', desc = "Extract here", for = "unix" },
+]
+
+# Archive viewing
+edit = [
+  { run = 'nvim "$@"', block = true, for = "unix" },
+]
+
+[open]
+# Archives
+rules = [
+  { mime = "application/zip",             use = "extract" },
+  { mime = "application/x-7z-compressed", use = "extract" },
+  { mime = "application/x-rar",           use = "extract" },
+  { mime = "application/x-tar",           use = "extract" },
+  { mime = "application/gzip",            use = "extract" },
+]
+
+[tasks]
+micro_workers = 5
+macro_workers = 10
+bizarre_retry = 5
