@@ -1,10 +1,10 @@
-[manager]
+[mgr]
 layout         = [1, 4, 3]
 sort_by        = "alphabetical"
 sort_sensitive = false
 sort_reverse   = false
 sort_dir_first = true
-linemode       = "size"
+linemode       = "size_and_mtime"  # Custom linemode showing both size and modification time
 show_hidden    = false
 show_symlink   = true
 

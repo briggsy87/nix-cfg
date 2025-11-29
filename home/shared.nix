@@ -29,7 +29,6 @@
     delta
 
     # TUI & workflow
-    yazi
     ranger
     nnn
     broot

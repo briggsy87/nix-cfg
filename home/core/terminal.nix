@@ -17,7 +17,6 @@
     unrar         # RAR archives
 
     # TUI applications
-    yazi          # File manager
     ranger        # File manager
     nnn           # File manager
     broot         # Tree navigator
@@ -69,6 +68,11 @@
   };
 
   # Yazi - file manager with Dracula theme
-  xdg.configFile."yazi/yazi.toml".source = ../yazi/yazi.toml;
-  xdg.configFile."yazi/theme.toml".source = ../yazi/theme.toml;
+  programs.yazi = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = builtins.fromTOML (builtins.readFile ../yazi/yazi.toml);
+    theme = builtins.fromTOML (builtins.readFile ../yazi/theme.toml);
+    initLua = builtins.readFile ../yazi/init.lua;
+  };
 }

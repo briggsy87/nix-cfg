@@ -86,7 +86,7 @@
 
       # General settings with Material Design aesthetics
       general = {
-        "$modifier" = "SUPER";
+        "$modifier" = "ALT";
         layout = "dwindle";
         gaps_in = 5;
         gaps_out = 7;

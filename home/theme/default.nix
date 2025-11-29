@@ -59,6 +59,7 @@ in
       bat.enable = false;      # Using manual Dracula theme in bat
       fzf.enable = true;
       tmux.enable = false;     # Using manual Dracula theme in tmux
+      yazi.enable = false;     # Using manual Dracula theme in yazi
 
       # Darwin-specific
       alacritty.enable = isDarwin;
