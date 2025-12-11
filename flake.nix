@@ -38,6 +38,13 @@
           platform = "nixos";
           profile = "personal";
         };
+        # Homelab infrastructure server
+        infra-01 = {
+          system = "x86_64-linux";
+          username = "root";
+          platform = "nixos";
+          profile = "server";
+        };
       };
 
       # Helper to create system configurations
@@ -87,6 +94,8 @@
               specialArgs = { inherit hostname username; };
               modules = [
                 ./hosts/${hostname}.nix
+              ] ++ lib.optionals (profile != "server") [
+                # Skip home-manager for server profiles
                 home-manager.nixosModules.home-manager
                 stylix.nixosModules.stylix
                 homeConfig
