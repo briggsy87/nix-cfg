@@ -11,9 +11,18 @@
     # User environment management
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # macOS app integration for Spotlight/Launchpad
+    mac-app-util.url = "github:hraban/mac-app-util";
+
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+
+    # System-wide theming
+    stylix.url = "github:danth/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, mac-app-util, nix-homebrew, stylix, ... }@inputs:
     let
       # Host configurations - add new hosts here
       hosts = {
@@ -21,11 +30,13 @@
           system = "aarch64-darwin";
           username = "kyle.briggs";
           platform = "darwin";
+          profile = "work";  # work or personal (defaults to personal if not set)
         };
         thinkpad = {
           system = "x86_64-linux";
           username = "briggsy";
           platform = "nixos";
+          profile = "personal";
         };
       };
 
@@ -33,16 +44,24 @@
       mkSystem = hostname: config:
         let
           inherit (config) system username platform;
+          profile = config.profile or "personal";  # Default to personal if not specified
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
+          lib = nixpkgs.lib;
 
           homeConfig = { ... }: {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.sharedModules = [
+              stylix.homeModules.stylix
+            ] ++ lib.optionals (platform == "darwin") [
+              # TODO: Uncomment when mac-app-util is enabled
+              #inputs.mac-app-util.homeManagerModules.default
+            ];
             home-manager.users.${username} = import ./home {
-              inherit platform;
+              inherit platform username profile;
             };
           };
         in
@@ -54,6 +73,10 @@
               modules = [
                 ./hosts/${hostname}.nix
                 home-manager.darwinModules.home-manager
+                nix-homebrew.darwinModules.nix-homebrew
+                # TODO: Uncomment when mac-app-util is enabled
+                #inputs.mac-app-util.darwinModules.default
+                stylix.darwinModules.stylix
                 homeConfig
               ];
             };
@@ -65,6 +88,7 @@
               modules = [
                 ./hosts/${hostname}.nix
                 home-manager.nixosModules.home-manager
+                stylix.nixosModules.stylix
                 homeConfig
               ];
             };

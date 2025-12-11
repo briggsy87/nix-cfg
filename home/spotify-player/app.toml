@@ -1,0 +1,65 @@
+# spotify-player configuration
+# Documentation: https://github.com/aome510/spotify-player/blob/master/examples/app.toml
+
+# Theme - use built-in Dracula theme
+theme = "dracula"
+
+# Client ID - your Spotify app client ID
+client_id = "65b708073fc0480ea92a077233ca87bd"
+
+# Playback display format
+playback_format = "{track} • {artists}"
+
+# Enable local streaming - play audio directly through this terminal
+enable_streaming = "Always"
+default_device = "spotify-player"
+
+# Media control
+enable_media_control = true
+enable_notify = false
+
+# Device configuration (required for local streaming)
+[device]
+name = "spotify-player"
+device_type = "speaker"
+volume = 70
+bitrate = 160
+audio_cache = true
+normalization = false
+
+# Cover image settings
+cover_img_scale = 1.0
+cover_img_width = 5
+
+# Keybindings (vi-style by default)
+[keybindings]
+# Navigation
+"k" = "previous"
+"j" = "next"
+"h" = "left"
+"l" = "right"
+"g" = "top"
+"G" = "bottom"
+
+# Playback
+"space" = "play_pause"
+"n" = "next_track"
+"p" = "previous_track"
+"+" = "volume_up"
+"-" = "volume_down"
+"m" = "mute"
+
+# Other
+"/" = "search"
+"q" = "quit"
+"?" = "help"
+"r" = "repeat"
+"s" = "shuffle"
+"R" = "refresh"
+
+# Search and browse
+"1" = "browse_playlists"
+"2" = "browse_saved_albums"
+"3" = "browse_saved_tracks"
+"4" = "browse_artists"
+"5" = "browse_podcasts"

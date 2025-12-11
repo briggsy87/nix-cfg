@@ -83,12 +83,46 @@ All dotfiles are managed **declaratively** via `xdg.configFile`:
 
 ### Neovim Philosophy
 
-Neovim is configured purely through Nix:
-- Plugins declared in `home/shared.nix` using `pkgs.vimPlugins`
-- LSP servers, formatters, linters installed as Nix packages
-- Configuration in `home/nvim/init.lua` uses system-installed LSPs
-- **No Mason, no separate package manager** - everything through Nix
-- Stack: Telescope + Treesitter + LSP + nvim-cmp + null-ls + oil.nvim + gitsigns
+Neovim uses a **modular, lazy-loaded architecture** managed through Nix + lazy.nvim:
+
+**Structure:**
+```
+home/nvim/
+├── init.lua                 # Bootstrap lazy.nvim
+├── lua/
+│   ├── config/             # Core configuration
+│   │   ├── options.lua     # Editor settings
+│   │   ├── keymaps.lua     # General keybindings
+│   │   └── autocmds.lua    # Autocommands (transparency, LSP)
+│   └── plugins/            # One file per plugin
+│       ├── colorscheme.lua
+│       ├── telescope.lua
+│       ├── treesitter.lua
+│       ├── lsp.lua
+│       ├── none-ls.lua     # Formatters/linters
+│       ├── completion.lua
+│       ├── oil.lua
+│       └── git.lua
+```
+
+**Key principles:**
+- **lazy.nvim** for plugin management and lazy loading
+- **Modular config** - each plugin in its own file for maintainability
+- **Nix-managed plugins** - all plugins installed via `pkgs.vimPlugins` (offline-first)
+- **Nix-managed tools** - LSP servers, formatters, linters as Nix packages
+- **Neovim 0.11+ native LSP API** (modern, no nvim-lspconfig dependency)
+- **none-ls.nvim** for external formatters/linters
+- **Transparency enabled** to match terminal (Ghostty 50% opacity)
+- **Dracula theme** active with alternative purple/dark themes available
+
+**Stack:** lazy.nvim + Telescope + Treesitter + Native LSP + nvim-cmp + none-ls + oil.nvim + gitsigns
+
+**📖 See `docs/vim.md` for comprehensive documentation:**
+- Modular configuration structure
+- Complete keybindings reference
+- How to add/modify plugins
+- LSP configuration details
+- Workflows and tips
 
 ## Common Commands
 
@@ -96,7 +130,10 @@ Neovim is configured purely through Nix:
 
 **macOS:**
 ```bash
-# First time setup
+# First time setup (requires experimental features enabled)
+# If nix-command/flakes not enabled, run:
+# mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
 nix run nix-darwin -- switch --flake .#m4pro
 
 # Subsequent updates
@@ -253,3 +290,14 @@ To add support for a new platform (e.g., `nixos-wsl`):
 1. Add new platform-specific module in `home/`
 2. Update `home/default.nix` import logic
 3. Add hosts with new platform type in `flake.nix`
+
+### Documentation Resources
+
+Detailed setup guides for tools requiring manual configuration:
+
+- **`docs/neomutt-setup.md`**: Email client setup (personal account)
+- **`docs/neomutt-work-oauth-setup.md`**: Work email with OAuth2
+- **`docs/task-management-setup.md`**: JiraTUI and Todoist CLI setup
+- **`docs/terminal-tools.md`**: Comprehensive Neovim, Tmux, and CLI tools guide
+
+**Post-install steps** documented in `README.md` under "Post-Install Steps" section.

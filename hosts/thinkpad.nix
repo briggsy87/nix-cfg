@@ -35,19 +35,30 @@
   time.timeZone = "America/Toronto";
   i18n.defaultLocale = "en_CA.UTF-8";
 
-  services.desktopManager = {
-    gnome.enable = true;
-  };
-  
-  services.displayManager = {
-    gdm.enable = true;
+  # Hyprland Wayland compositor
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
   };
 
-  # X11 / Desktop environment (matching your working config - GNOME)
+  # SDDM display manager for Hyprland
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  # XDG portal for Hyprland
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+  # Enable X11 for XWayland support
   services.xserver = {
     enable = true;
-
-    # Keyboard layout
     xkb = {
       layout = "us";
       variant = "";
@@ -65,7 +76,22 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # Enable bluetooth audio support
+    wireplumber.enable = true;
   };
+
+  # Enable Bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true;
+      };
+    };
+  };
+  services.blueman.enable = true;
 
   # User account
   users.users.${username} = {
@@ -91,6 +117,15 @@
     wget
     curl
     git
+
+    # Hyprland essentials
+    kitty              # Default terminal
+    firefox            # Browser
+    networkmanagerapplet  # Network manager tray
+
+    # Wayland utilities
+    wayland
+    xwayland
   ];
 
   # Enable docker
@@ -108,6 +143,18 @@
 
   # Enable zsh system-wide
   programs.zsh.enable = true;
+
+  # Enable polkit (required for Hyprland)
+  security.polkit.enable = true;
+
+  # Allow wheel group to use sudo without password
+  security.sudo.wheelNeedsPassword = false;
+
+  # Fonts
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    montserrat
+  ];
 
   # SSH daemon (optional - uncomment if needed)
   # services.openssh.enable = true;

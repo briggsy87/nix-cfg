@@ -7,6 +7,9 @@ secrets/
 *.age
 *.gpg
 .sops.yaml
+*.secret
+*accounts.secret*
+!*.secret.template
 
 # Environment files
 .env

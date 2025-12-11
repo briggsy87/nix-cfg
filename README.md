@@ -96,6 +96,12 @@ nix-shell -p git
 
 First-time setup:
 ```bash
+# Enable experimental features if not already enabled
+mkdir -p ~/.config/nix
+cat > ~/.config/nix/nix.conf <<EOF
+experimental-features = nix-command flakes
+EOF
+
 # Install nix-darwin
 nix run nix-darwin -- switch --flake ~/nix-config#m4pro
 
@@ -271,6 +277,35 @@ curl -fsSL https://anthropic.sh | sh
 # Authenticate
 claude auth login
 ```
+
+### Configure Task Management Tools
+
+Both JiraTUI and Todoist require API credentials:
+
+**JiraTUI (Jira TUI):**
+```bash
+# Copy template
+cp ~/.config/jiratui/config.yaml.template ~/.config/jiratui/config.yaml
+
+# Edit with your Jira credentials
+nvim ~/.config/jiratui/config.yaml
+# Add: jira_api_username, jira_api_token, jira_api_base_url
+
+# Launch
+jiratui ui
+```
+
+**Todoist CLI:**
+```bash
+# Get token from: https://todoist.com → Settings → Integrations
+# Set environment variable in ~/.zshrc:
+export TODOIST_TOKEN="your-api-token-here"
+
+# Or run with token:
+todoist --token YOUR_TOKEN list
+```
+
+See [docs/task-management-setup.md](docs/task-management-setup.md) for detailed setup instructions.
 
 ### macOS Additional Setup
 

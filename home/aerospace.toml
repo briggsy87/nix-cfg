@@ -1,100 +1,176 @@
-# Aerospace minimal config
+# Aerospace configuration
+# See: https://github.com/nikitabobko/AeroSpace
 
-
-# Workspaces 1–9
-"hyper-1" = "workspace 1"
-"hyper-2" = "workspace 2"
-"hyper-3" = "workspace 3"
-"hyper-4" = "workspace 4"
-"hyper-5" = "workspace 5"
-"hyper-6" = "workspace 6"
-"hyper-7" = "workspace 7"
-"hyper-8" = "workspace 8"
-"hyper-9" = "workspace 9"
-
-
-# Move window to workspace
-"hyper-shift-1" = "move-node-to-workspace 1"
-"hyper-shift-2" = "move-node-to-workspace 2"
-"hyper-shift-3" = "move-node-to-workspace 3"
-"hyper-shift-4" = "move-node-to-workspace 4"
-"hyper-shift-5" = "move-node-to-workspace 5"
-"hyper-shift-6" = "move-node-to-workspace 6"
-"hyper-shift-7" = "move-node-to-workspace 7"
-"hyper-shift-8" = "move-node-to-workspace 8"
-"hyper-shift-9" = "move-node-to-workspace 9"
-```toml
-# Aerospace minimal config
+# Start at login
 start-at-login = true
 
+# Normalizations
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
 
+# Mouse follows focus
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Default layout
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# Gaps
 [gaps]
-inner = 8
-outer = 8
+inner.horizontal = 8
+inner.vertical = 8
+outer.left = 8
+outer.bottom = 8
+outer.top = 8
+outer.right = 8
 
+# Multi-monitor workspace assignments
+# Uncomment when you have 3 monitors set up and want to pin workspaces to specific monitors
+# Monitor IDs: 1 = primary/built-in, 2 = first external, 3 = second external
+# To find your monitor IDs: aerospace list-monitors
+#
+# [workspace-to-monitor-force-assignment]
+# 1 = 1    # Browser on monitor 1 (primary/built-in)
+# 2 = 1    # Terminal on monitor 1 (primary/built-in)
+# 3 = 1    # General on monitor 1 (primary/built-in)
+# 4 = 2    # Code editor on monitor 2 (first external)
+# 5 = 2    # General on monitor 2 (first external)
+# 6 = 2    # General on monitor 2 (first external)
+# 7 = 3    # General on monitor 3 (second external)
+# 8 = 3    # Communication on monitor 3 (second external)
+# 9 = 3    # General on monitor 3 (second external)
 
-[layout]
-default = "tiles"
-# also: "accordion", "floating"; toggle in keybinds
+# Workspace assignments
+# Browsers on workspace 1
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 1'
 
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 1'
 
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 1'
+
+# Terminals on workspace 2
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Terminal'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = 'move-node-to-workspace 2'
+
+# Code editors on workspace 4
+[[on-window-detected]]
+if.app-id = 'com.sublimetext.4'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'
+run = 'move-node-to-workspace 4'
+
+# Communication on workspace 8
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+if.app-id = 'org.neomutt'
+run = 'move-node-to-workspace 8'
+
+# Key bindings (Alt on macOS, matching Hyprland SUPER layout)
 [mode.main.binding]
-# Focus movement (vim keys)
-"hyper-h" = "focus left"
-"hyper-j" = "focus down"
-"hyper-k" = "focus up"
-"hyper-l" = "focus right"
+# Focus windows (alt+hjkl - matches Hyprland SUPER+hjkl)
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
 
+# Move windows (alt+shift+hjkl - matches Hyprland SUPER+SHIFT+hjkl)
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
 
-# Move window
-"hyper-shift-h" = "move left"
-"hyper-shift-j" = "move down"
-"hyper-shift-k" = "move up"
-"hyper-shift-l" = "move right"
+# Resize windows (alt+ctrl+hjkl for fine control)
+alt-ctrl-h = 'resize smart -50'
+alt-ctrl-l = 'resize smart +50'
+alt-ctrl-j = 'resize smart -50'
+alt-ctrl-k = 'resize smart +50'
 
+# Kill window (alt+q - matches Hyprland SUPER+Q)
+alt-q = 'close'
 
-# Resize window
-"hyper-ctrl-h" = "resize width -50"
-"hyper-ctrl-l" = "resize width +50"
-"hyper-ctrl-j" = "resize height +50"
-"hyper-ctrl-k" = "resize height -50"
+# Toggle floating (alt+w - matches Hyprland SUPER+W)
+alt-w = 'layout floating tiling'
 
+# Fullscreen (alt+shift+f - matches Hyprland SUPER+SHIFT+F)
+alt-shift-f = 'fullscreen'
 
-# Float / tile toggle
-"hyper-t" = "toggle float"
+# Launch apps (matching Hyprland)
+alt-enter = 'exec-and-forget open -a Ghostty'        # SUPER+RETURN = primary terminal
+alt-t = 'exec-and-forget open -a Alacritty'           # SUPER+T = backup terminal (like Hyprland)
+alt-b = 'exec-and-forget open -a Arc'                 # SUPER+B = browser (like Hyprland)
+#alt-space = 'exec-and-forget open -a Raycast'         # SUPER+SPACE = launcher (like rofi)
 
+# Switch to workspace (alt+number - matches Hyprland SUPER+1-9)
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
 
-# Fullscreen
-"hyper-f" = "fullscreen"
+# Move window to workspace (alt+shift+number - matches Hyprland SUPER+SHIFT+1-9)
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
 
+# Multi-monitor: Move workspace to another monitor
+alt-ctrl-left = 'move-workspace-to-monitor --wrap-around prev'
+alt-ctrl-right = 'move-workspace-to-monitor --wrap-around next'
 
-# Split orientation toggle (if supported) or cycle layout
-"hyper-space" = "layout next"
+# Multi-monitor: Move focused window to another monitor
+alt-shift-left = 'move-node-to-monitor --wrap-around prev'
+alt-shift-right = 'move-node-to-monitor --wrap-around next'
 
+# Service mode for config management (alt+shift+semicolon then r to reload)
+alt-shift-semicolon = 'mode service'
 
-# Launch terminal
-"hyper-enter" = "exec alacritty"
-
-
-# Workspaces 1–9
-"hyper-1" = "workspace 1"
-"hyper-2" = "workspace 2"
-"hyper-3" = "workspace 3"
-"hyper-4" = "workspace 4"
-"hyper-5" = "workspace 5"
-"hyper-6" = "workspace 6"
-"hyper-7" = "workspace 7"
-"hyper-8" = "workspace 8"
-"hyper-9" = "workspace 9"
-
-
-# Move window to workspace
-"hyper-shift-1" = "move-node-to-workspace 1"
-"hyper-shift-2" = "move-node-to-workspace 2"
-"hyper-shift-3" = "move-node-to-workspace 3"
-"hyper-shift-4" = "move-node-to-workspace 4"
-"hyper-shift-5" = "move-node-to-workspace 5"
-"hyper-shift-6" = "move-node-to-workspace 6"
-"hyper-shift-7" = "move-node-to-workspace 7"
-"hyper-shift-8" = "move-node-to-workspace 8"
-"hyper-shift-9" = "move-node-to-workspace 9"
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+f = ['layout floating tiling', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main']

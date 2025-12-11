@@ -2,10 +2,25 @@ font-family = JetBrainsMono Nerd Font
 font-size = 14
 window-padding-x = 8
 window-padding-y = 8
+
+# Pure black background with high transparency
+background = #000000
+background-opacity = 0.50
+background-blur-radius = 20
+
+# macOS specific
 macos-titlebar-style = hidden
 macos-option-as-alt = true
+
+# Cursor
 cursor-style = block
+
+# Shell integration
 shell-integration = zsh
-selection-copy-to-clipboard = true
-# Example key: full screen
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+# Keybindings
 keybind = cmd+enter=toggle_fullscreen

@@ -1,0 +1,155 @@
+# Dracula theme for yazi - Proper structure
+# Based on https://draculatheme.com/contribute
+
+[flavor]
+use = ""
+
+# Manager
+[mgr]
+cwd = { fg = "#bd93f9", bold = true }  # Purple for current directory
+
+# Hovered
+hovered         = { fg = "#282a36", bg = "#ff79c6", bold = true }  # Dark on pink
+preview_hovered = { fg = "#282a36", bg = "#bd93f9" }  # Dark on purple
+
+# Find
+find_keyword  = { fg = "#f1fa8c", bold = true, italic = true }
+find_position = { fg = "#ff79c6", bg = "reset", italic = true }
+
+# Marker
+marker_copied   = { fg = "#50fa7b", bg = "#50fa7b" }
+marker_cut      = { fg = "#ff5555", bg = "#ff5555" }
+marker_marked   = { fg = "#bd93f9", bg = "#bd93f9" }  # Purple
+marker_selected = { fg = "#ff79c6", bg = "#ff79c6" }  # Pink
+
+# Count
+count_copied   = { fg = "#282a36", bg = "#50fa7b" }
+count_cut      = { fg = "#282a36", bg = "#ff5555" }
+count_selected = { fg = "#282a36", bg = "#ff79c6" }  # Pink
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#bd93f9" }  # Purple
+
+# Tabs - separate section
+[tabs]
+active   = { fg = "#282a36", bg = "#ff79c6", bold = true }  # Dark on pink
+inactive = { fg = "#bd93f9", bg = "#44475a" }  # Purple on dark gray
+
+# Mode - separate section (this controls NOR/SEL display)
+[mode]
+normal_main = { fg = "#282a36", bg = "#bd93f9", bold = true }  # Dark on purple
+normal_alt  = { fg = "#bd93f9", bg = "#44475a" }  # Purple on dark gray
+
+select_main = { fg = "#282a36", bg = "#ff79c6", bold = true }  # Dark on pink
+select_alt  = { fg = "#ff79c6", bg = "#44475a" }  # Pink on dark gray
+
+unset_main  = { fg = "#282a36", bg = "#ffb86c", bold = true }  # Dark on orange
+unset_alt   = { fg = "#ffb86c", bg = "#44475a" }  # Orange on dark gray
+
+# Status
+[status]
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+
+# Progress - bottom right item/page counter
+progress_label  = { fg = "#282a36", bg = "#bd93f9", bold = true }  # Dark on purple
+progress_normal = { fg = "#bd93f9", bg = "#44475a" }  # Purple on dark gray
+progress_error  = { fg = "#f8f8f2", bg = "#ff5555", bold = true }  # White on red
+
+# Permissions (file info area)
+perm_type  = { fg = "#bd93f9" }  # Purple for file type
+perm_read  = { fg = "#bd93f9" }  # Purple for read
+perm_write = { fg = "#ff79c6" }  # Pink for write
+perm_exec  = { fg = "#50fa7b" }  # Green for execute
+perm_sep   = { fg = "#6272a4" }  # Muted gray for separators
+
+# Input
+[input]
+border   = { fg = "#bd93f9" }  # Purple
+title    = { fg = "#ff79c6" }  # Pink
+value    = { fg = "#f8f8f2" }  # White
+selected = { reversed = true }
+
+# Select/Pick
+[pick]
+border   = { fg = "#bd93f9" }  # Purple
+active   = { fg = "#ff79c6", bold = true }  # Pink
+inactive = { fg = "#6272a4" }  # Gray
+
+# Confirm dialogs
+[confirm]
+border     = { fg = "#bd93f9" }  # Purple
+title      = { fg = "#bd93f9" }  # Purple
+content    = { fg = "#f8f8f2" }  # White
+list       = {}
+btn_yes    = { fg = "#282a36", bg = "#50fa7b", bold = true }  # Dark on green
+btn_no     = { fg = "#282a36", bg = "#ff5555", bold = true }  # Dark on red
+
+# Completion
+[cmp]
+border = { fg = "#bd93f9" }  # Purple
+
+# Tasks
+[tasks]
+border  = { fg = "#bd93f9" }  # Purple
+title   = { fg = "#ff79c6" }  # Pink
+hovered = { fg = "#ff79c6", underline = true }  # Pink
+
+# Which (key helper)
+[which]
+mask            = { bg = "#282a36" }
+cand            = { fg = "#bd93f9" }  # Purple
+rest            = { fg = "#6272a4" }  # Gray
+desc            = { fg = "#ff79c6" }  # Pink
+separator       = "  "
+separator_style = { fg = "#44475a" }
+
+# Help
+[help]
+on      = { fg = "#50fa7b" }  # Green
+run     = { fg = "#ff79c6" }  # Pink
+desc    = { fg = "#6272a4" }  # Gray
+hovered = { bg = "#44475a", bold = true }  # Dark gray
+footer  = { fg = "#f8f8f2", bg = "#44475a" }  # White on dark gray
+
+# Notify
+[notify]
+title_info  = { fg = "#bd93f9" }  # Purple
+title_warn  = { fg = "#f1fa8c" }  # Yellow
+title_error = { fg = "#ff5555" }  # Red
+
+# File-specific styles
+[filetype]
+rules = [
+  # Images - PINK (very prominent)
+  { mime = "image/*", fg = "#ff79c6" },
+
+  # Media
+  { mime = "video/*", fg = "#ffb86c" },  # Orange
+  { mime = "audio/*", fg = "#f1fa8c" },  # Yellow
+
+  # Archives - PURPLE (very prominent)
+  { mime = "application/zip",             fg = "#bd93f9" },
+  { mime = "application/gzip",            fg = "#bd93f9" },
+  { mime = "application/x-tar",           fg = "#bd93f9" },
+  { mime = "application/x-bzip",          fg = "#bd93f9" },
+  { mime = "application/x-bzip2",         fg = "#bd93f9" },
+  { mime = "application/x-7z-compressed", fg = "#bd93f9" },
+  { mime = "application/x-rar",           fg = "#bd93f9" },
+
+  # Documents
+  { mime = "application/pdf", fg = "#ff5555" },  # Red
+
+  # Code files - add pink/purple emphasis
+  { name = "*.rs", fg = "#ff79c6" },     # Rust - pink
+  { name = "*.go", fg = "#8be9fd" },     # Go - cyan
+  { name = "*.py", fg = "#f1fa8c" },     # Python - yellow
+  { name = "*.js", fg = "#f1fa8c" },     # JavaScript - yellow
+  { name = "*.ts", fg = "#8be9fd" },     # TypeScript - cyan
+  { name = "*.nix", fg = "#bd93f9" },    # Nix - purple
+
+  # Fallback
+  { name = "*", fg = "#f8f8f2" },        # Regular files - white
+  { name = "*/", fg = "#bd93f9" },       # Directories - PURPLE
+]
