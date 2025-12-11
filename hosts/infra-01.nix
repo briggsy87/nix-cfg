@@ -7,7 +7,7 @@
 
     # Import service modules
     ../modules/services/postgresql.nix
-    ../modules/services/redis.nix
+    #../modules/services/redis.nix
     ../modules/services/gitea.nix
     ../modules/services/backup.nix
   ];
