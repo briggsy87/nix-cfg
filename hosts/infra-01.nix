@@ -61,12 +61,8 @@
     };
   };
 
-  # GRUB bootloader - explicitly set device
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    efiSupport = false;
-  };
+  # GRUB bootloader - device is auto-configured by disko
+  boot.loader.grub.enable = true;
 
   # Nix settings (standard across all hosts)
   nix.settings = {
