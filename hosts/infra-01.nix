@@ -18,24 +18,22 @@
         type = "disk";
         device = "/dev/sda";
         content = {
-          type = "gpt";
-          partitions = {
-            MBR = {
-              priority = 0;
-              size = "1M";
-              type = "EF02"; # BIOS boot partition
-            };
-            root = {
-              priority = 1;
-              size = "100%";
+          type = "table";
+          format = "msdos"; # Use MBR instead of GPT for better BIOS compatibility
+          partitions = [
+            {
+              type = "partition";
+              start = "1M";
+              end = "100%";
+              bootable = true;
               content = {
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
                 extraArgs = [ "-L" "nixos" ];
               };
-            };
-          };
+            }
+          ];
         };
       };
 
