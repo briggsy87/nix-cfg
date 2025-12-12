@@ -20,14 +20,13 @@
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              name = "boot";
+            MBR = {
+              priority = 0;
               size = "1M";
-              type = "EF02"; # BIOS boot partition for GRUB
-              priority = 1;
+              type = "EF02"; # BIOS boot partition
             };
             root = {
-              name = "root";
+              priority = 1;
               size = "100%";
               content = {
                 type = "filesystem";
@@ -35,7 +34,6 @@
                 mountpoint = "/";
                 extraArgs = [ "-L" "nixos" ];
               };
-              priority = 2;
             };
           };
         };
@@ -49,7 +47,6 @@
           type = "gpt";
           partitions = {
             data = {
-              name = "data";
               size = "100%";
               content = {
                 type = "filesystem";
@@ -62,6 +59,13 @@
         };
       };
     };
+  };
+
+  # GRUB bootloader - explicitly set device
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";
+    efiSupport = false;
   };
 
   # Nix settings (standard across all hosts)
