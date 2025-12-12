@@ -57,6 +57,9 @@
     };
   };
 
+  # GRUB bootloader configuration - specify device explicitly
+  boot.loader.grub.devices = [ "/dev/sda" ];
+
   # Nix settings (standard across all hosts)
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -64,11 +67,7 @@
     warn-dirty = false;
   };
 
-  # Bootloader - GRUB for BIOS mode (Proxmox default)
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";  # Install GRUB to MBR
-  };
+  # Bootloader - GRUB is configured above via boot.loader.grub.devices
 
   # Use latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
