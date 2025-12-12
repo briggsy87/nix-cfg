@@ -33,7 +33,7 @@
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
-                label = "nixos";
+                extraArgs = [ "-L" "nixos" ];
               };
               priority = 2;
             };
@@ -55,7 +55,7 @@
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/data";
-                label = "data";
+                extraArgs = [ "-L" "data" ];
               };
             };
           };
