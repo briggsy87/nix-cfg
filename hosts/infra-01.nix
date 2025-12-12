@@ -84,10 +84,10 @@
   # Networking
   networking = {
     hostName = hostname;
-    networkmanager.enable = true;
 
-    # Static IP is configured by Proxmox/Terraform via cloud-init
-    # No need to set it here
+    # Use systemd-networkd for server (more reliable than NetworkManager)
+    useDHCP = false;
+    useNetworkd = true;
 
     # Firewall configuration
     firewall = {
@@ -100,6 +100,21 @@
         # 6379 opened by redis.nix
         # 3000 opened by gitea.nix
       ];
+    };
+  };
+
+  # Configure static IP via systemd-networkd
+  # TODO: Make this configurable via Terraform/environment variables
+  systemd.network = {
+    enable = true;
+    networks."10-wan" = {
+      matchConfig.Name = "ens18";  # Default Proxmox virtio NIC name
+      networkConfig = {
+        Address = "192.168.1.180/24";
+        Gateway = "192.168.1.1";
+        DNS = [ "192.168.1.1" ];
+      };
+      linkConfig.RequiredForOnline = "routable";
     };
   };
 
