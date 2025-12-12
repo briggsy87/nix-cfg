@@ -22,16 +22,7 @@
           partitions = {
             boot = {
               size = "1M";
-              type = "EF02"; # BIOS boot partition
-            };
-            ESP = {
-              size = "500M";
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-              };
+              type = "EF02"; # BIOS boot partition for GRUB
             };
             root = {
               size = "100%";
@@ -73,10 +64,10 @@
     warn-dirty = false;
   };
 
-  # Bootloader
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+  # Bootloader - GRUB for BIOS mode (Proxmox default)
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";  # Install GRUB to MBR
   };
 
   # Use latest kernel
