@@ -10,7 +10,7 @@
     #../modules/services/backup.nix
   ];
 
-  # Disko disk configuration for nixos-anywhere
+  # Disko disk configuration for nixos-anywhere (UEFI)
   disko.devices = {
     disk = {
       # Main OS disk (20G from Terraform - /dev/vda or /dev/sda)
@@ -18,22 +18,26 @@
         type = "disk";
         device = "/dev/sda";
         content = {
-          type = "table";
-          format = "msdos"; # Use MBR instead of GPT for better BIOS compatibility
-          partitions = [
-            {
-              type = "partition";
-              start = "1M";
-              end = "100%";
-              bootable = true;
+          type = "gpt";
+          partitions = {
+            ESP = {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
-                extraArgs = [ "-L" "nixos" ];
               };
-            }
-          ];
+            };
+          };
         };
       };
 
@@ -59,8 +63,11 @@
     };
   };
 
-  # GRUB bootloader - device is auto-configured by disko
-  boot.loader.grub.enable = true;
+  # Bootloader - systemd-boot for UEFI
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
   # Nix settings (standard across all hosts)
   nix.settings = {
