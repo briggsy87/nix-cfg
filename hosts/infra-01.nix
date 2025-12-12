@@ -21,16 +21,20 @@
           type = "gpt";
           partitions = {
             boot = {
+              name = "boot";
               size = "1M";
               type = "EF02"; # BIOS boot partition for GRUB
+              priority = 1;
             };
             root = {
+              name = "root";
               size = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
               };
+              priority = 2;
             };
           };
         };
