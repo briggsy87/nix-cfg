@@ -33,6 +33,7 @@
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
+                label = "nixos";
               };
               priority = 2;
             };
@@ -48,11 +49,13 @@
           type = "gpt";
           partitions = {
             data = {
+              name = "data";
               size = "100%";
               content = {
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/data";
+                label = "data";
               };
             };
           };
