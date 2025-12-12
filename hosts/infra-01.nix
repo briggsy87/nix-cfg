@@ -6,7 +6,8 @@
     ../modules/services/postgresql.nix
     #../modules/services/redis.nix
     ../modules/services/gitea.nix
-    ../modules/services/backup.nix
+    # TODO: Enable backup.nix after configuring passphrase
+    #../modules/services/backup.nix
   ];
 
   # Disko disk configuration for nixos-anywhere
