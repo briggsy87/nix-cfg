@@ -20,9 +20,13 @@
     # System-wide theming
     stylix.url = "github:danth/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Disk partitioning for nixos-anywhere
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, mac-app-util, nix-homebrew, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home-manager, mac-app-util, nix-homebrew, stylix, disko, ... }@inputs:
     let
       # Host configurations - add new hosts here
       hosts = {
@@ -94,6 +98,9 @@
               specialArgs = { inherit hostname username; };
               modules = [
                 ./hosts/${hostname}.nix
+              ] ++ lib.optionals (profile == "server") [
+                # Add disko for server profiles (for nixos-anywhere)
+                disko.nixosModules.disko
               ] ++ lib.optionals (profile != "server") [
                 # Skip home-manager for server profiles
                 home-manager.nixosModules.home-manager

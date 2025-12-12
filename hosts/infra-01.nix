@@ -2,15 +2,68 @@
 
 {
   imports = [
-    # Hardware configuration will be added by nixos-anywhere
-    # It will create infra-01-hardware.nix automatically
-
     # Import service modules
     ../modules/services/postgresql.nix
     #../modules/services/redis.nix
     ../modules/services/gitea.nix
     ../modules/services/backup.nix
   ];
+
+  # Disko disk configuration for nixos-anywhere
+  disko.devices = {
+    disk = {
+      # Main OS disk (20G from Terraform - /dev/vda or /dev/sda)
+      main = {
+        type = "disk";
+        device = "/dev/sda";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "1M";
+              type = "EF02"; # BIOS boot partition
+            };
+            ESP = {
+              size = "500M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+
+      # Data disk (50G from Terraform - /dev/vdb or /dev/sdb)
+      data = {
+        type = "disk";
+        device = "/dev/sdb";
+        content = {
+          type = "gpt";
+          partitions = {
+            data = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/data";
+              };
+            };
+          };
+        };
+      };
+    };
+  };
 
   # Nix settings (standard across all hosts)
   nix.settings = {
@@ -53,14 +106,6 @@
   # Locale & timezone
   time.timeZone = "America/Toronto";
   i18n.defaultLocale = "en_CA.UTF-8";
-
-  # Mount /data disk (second disk from Terraform)
-  # This will be /dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1
-  fileSystems."/data" = {
-    device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1";
-    fsType = "ext4";
-    autoFormat = true; # NixOS will format on first boot if not formatted
-  };
 
   # SSH server for remote management
   services.openssh = {
