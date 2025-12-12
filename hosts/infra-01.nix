@@ -57,9 +57,6 @@
     };
   };
 
-  # GRUB bootloader configuration - specify device explicitly
-  boot.loader.grub.devices = [ "/dev/sda" ];
-
   # Nix settings (standard across all hosts)
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
