@@ -2,6 +2,8 @@
 
 {
   imports = [
+    # Disko disk configuration (must be imported for fileSystems generation)
+    ./infra-01-disko.nix
     # Import service modules
     ../modules/services/postgresql.nix
     #../modules/services/redis.nix
@@ -10,63 +12,17 @@
     #../modules/services/backup.nix
   ];
 
-  # Disko disk configuration for nixos-anywhere (UEFI)
-  disko.devices = {
-    disk = {
-      # Main OS disk (20G from Terraform - /dev/vda or /dev/sda)
-      main = {
-        type = "disk";
-        device = "/dev/sda";
-        content = {
-          type = "gpt";
-          partitions = {
-            ESP = {
-              size = "512M";
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-              };
-            };
-            root = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/";
-              };
-            };
-          };
-        };
-      };
-
-      # Data disk (50G from Terraform - /dev/vdb or /dev/sdb)
-      data = {
-        type = "disk";
-        device = "/dev/sdb";
-        content = {
-          type = "gpt";
-          partitions = {
-            data = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/data";
-                extraArgs = [ "-L" "data" ];
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-
   # Bootloader - systemd-boot for UEFI
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
+  };
+
+  # Enable serial console for Proxmox
+  boot.kernelParams = [ "console=tty0" "console=ttyS0,115200" ];
+  systemd.services."serial-getty@ttyS0" = {
+    enable = true;
+    wantedBy = [ "multi-user.target" ];
   };
 
   # Nix settings (standard across all hosts)
@@ -85,9 +41,8 @@
   networking = {
     hostName = hostname;
 
-    # Use systemd-networkd for server (more reliable than NetworkManager)
-    useDHCP = false;
-    useNetworkd = true;
+    # Use DHCP temporarily for debugging - will get static IP from router
+    useDHCP = true;
 
     # Firewall configuration
     firewall = {
@@ -100,21 +55,6 @@
         # 6379 opened by redis.nix
         # 3000 opened by gitea.nix
       ];
-    };
-  };
-
-  # Configure static IP via systemd-networkd
-  # TODO: Make this configurable via Terraform/environment variables
-  systemd.network = {
-    enable = true;
-    networks."10-wan" = {
-      matchConfig.Name = "ens18";  # Default Proxmox virtio NIC name
-      networkConfig = {
-        Address = "192.168.1.180/24";
-        Gateway = "192.168.1.1";
-        DNS = [ "192.168.1.1" ];
-      };
-      linkConfig.RequiredForOnline = "routable";
     };
   };
 
@@ -133,6 +73,10 @@
 
   # Root user configuration
   users.users.root = {
+    # TEMPORARY: Enable password authentication for debugging console access
+    # TODO: Remove this and use SSH keys only in production
+    initialPassword = "nixos123";  # Change this on first login!
+
     # SSH keys will be managed by Terraform/nixos-anywhere
     openssh.authorizedKeys.keys = [
       # TODO: Add your SSH public key here
