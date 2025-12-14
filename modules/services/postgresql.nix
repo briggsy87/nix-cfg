@@ -59,6 +59,15 @@
         ensureDBOwnership = true;
       }
     ];
+
+    # Set initial passwords via SQL script
+    initialScript = pkgs.writeText "postgresql-init.sql" ''
+      -- Set password for postgres superuser (change this!)
+      ALTER USER postgres WITH PASSWORD 'nixos123';
+
+      -- Set password for gitea user
+      ALTER USER gitea WITH PASSWORD 'gitea';
+    '';
   };
 
   # Ensure /data/postgresql exists with correct permissions
