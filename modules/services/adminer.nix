@@ -18,7 +18,7 @@
       Type = "simple";
       User = "adminer";
       Group = "adminer";
-      ExecStart = "${pkgs.php}/bin/php -S 0.0.0.0:8080 -t ${pkgs.adminer}/adminer";
+      ExecStart = "${pkgs.php}/bin/php -S 0.0.0.0:8080 ${pkgs.adminer}/adminer.php";
       Restart = "on-failure";
       RestartSec = "10s";
     };
