@@ -18,8 +18,8 @@
       port = 5432;
       name = "gitea";
       user = "gitea";
-      # Password will be set via passwordFile (TODO: use agenix)
-      # passwordFile = "/run/agenix/gitea-db-password";
+      password = "gitea"; # TODO: Use agenix for production
+      createDatabase = true; # Automatically create database
     };
 
     # Application settings
@@ -52,7 +52,7 @@
 
       security = {
         INSTALL_LOCK = true;
-        SECRET_KEY_URI = "file:/data/gitea/secret_key"; # Will be auto-generated
+        # SECRET_KEY will be auto-generated in stateDir
       };
 
       # Logging
