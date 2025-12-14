@@ -36,11 +36,13 @@
     authentication = pkgs.lib.mkOverride 10 ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD
 
-      # Local connections (for admin tasks)
+      # Local Unix socket connections
       local   all             postgres                                peer
-      local   all             all                                     peer
+      local   all             all                                     scram-sha-256
 
-      # Network connections from local network (for services)
+      # Network connections (localhost and local network)
+      host    all             all             127.0.0.1/32            scram-sha-256
+      host    all             all             ::1/128                 scram-sha-256
       host    all             all             192.168.1.0/24          scram-sha-256
 
       # Reject all other connections
