@@ -9,6 +9,7 @@
     ../modules/services/postgresql.nix
     ../modules/services/gitea.nix
     ../modules/services/adminer.nix
+    ../modules/services/traefik.nix
 
     # Disabled services (uncomment when ready)
     #../modules/services/redis.nix
@@ -129,6 +130,24 @@
   # Enable zsh for root
   programs.zsh.enable = true;
   users.users.root.shell = pkgs.zsh;
+
+  # SOPS secrets management
+  sops = {
+    # Use shared homelab age key (injected by Pulumi via cloud-init)
+    # This allows all homelab VMs to decrypt secrets without per-host key management
+    age.keyFile = "/etc/sops/homelab-key.txt";
+
+    # Default file for secrets
+    defaultSopsFile = ../secrets/infra-01.yaml;
+
+    # Define secrets to decrypt
+    secrets = {
+      aws_access_key_id = {};
+      aws_secret_access_key = {};
+      postgres_admin_password = {};
+      gitea_db_password = {};
+    };
+  };
 
   # System state version (NixOS 25.05)
   system.stateVersion = "25.05";
