@@ -53,13 +53,6 @@
     wantedBy = [ "multi-user.target" ];
   };
 
-  # Nix settings
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    auto-optimise-store = true;
-    warn-dirty = false;
-  };
-
   # Use latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -114,28 +107,15 @@
     ];
   };
 
-  # System packages
+  # Additional server-specific packages (common packages in modules/common)
   environment.systemPackages = with pkgs; [
-    # Editors
-    vim
-
-    # Network tools
-    wget
-    curl
-
-    # Version control
-    git
-
-    # System monitoring
-    htop
+    # Advanced monitoring
     btop
     ncdu
     tree
 
-    # Terminal multiplexer
+    # Terminal tools
     tmux
-
-    # Terminal compatibility
     ncurses
 
     # Database clients
@@ -149,9 +129,6 @@
   # Enable zsh for root
   programs.zsh.enable = true;
   users.users.root.shell = pkgs.zsh;
-
-  # Allow unfree packages (if needed)
-  nixpkgs.config.allowUnfree = true;
 
   # System state version (NixOS 25.05)
   system.stateVersion = "25.05";

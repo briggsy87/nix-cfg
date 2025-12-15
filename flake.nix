@@ -24,9 +24,13 @@
     # Disk partitioning for nixos-anywhere
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Secrets management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, mac-app-util, nix-homebrew, stylix, disko, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home-manager, mac-app-util, nix-homebrew, stylix, disko, sops-nix, ... }@inputs:
     let
       # Host configurations - add new hosts here
       hosts = {
@@ -98,6 +102,10 @@
               specialArgs = { inherit hostname username; };
               modules = [
                 ./hosts/${hostname}.nix
+                # Common configuration for all NixOS hosts
+                ./modules/common
+                # Add sops-nix for all NixOS systems
+                sops-nix.nixosModules.sops
               ] ++ lib.optionals (profile == "server") [
                 # Add disko for server profiles (for nixos-anywhere)
                 disko.nixosModules.disko
