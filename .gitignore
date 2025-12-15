@@ -2,14 +2,15 @@
 result
 result-*
 
-# Secrets (for future sops-nix usage)
-secrets/
-*.age
-*.gpg
-.sops.yaml
+# Secrets - SOPS encrypted files are SAFE to commit
+# Only block unencrypted secret files
 *.secret
 *accounts.secret*
 !*.secret.template
+
+# SOPS configuration and encrypted files are tracked
+# .sops.yaml - defines encryption keys (public keys are safe)
+# secrets/*.yaml - encrypted with SOPS (safe to commit)
 
 # Environment files
 .env

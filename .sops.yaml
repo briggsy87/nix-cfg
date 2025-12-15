@@ -1,0 +1,26 @@
+# SOPS configuration for encrypting secrets
+# Defines which age keys can decrypt which files
+
+keys:
+  # infra-01 host key (from /etc/ssh/ssh_host_ed25519_key.pub)
+  - &infra-01 age1dx8p7qapyqwjt5fny7qen0p3k3e74nkf399t8f3zajukntctzquq7qahd8
+
+  # TODO: Add your personal age key for local development
+  # Generate with: age-keygen -o ~/.config/sops/age/keys.txt
+  # Then add the public key here
+  - &admin age17z3dr8u7tyr4h38hx9q47av7eszhha4h0huk9f2pu9r8q557t42qttj4cv
+
+creation_rules:
+  # Secrets for infra-01 server
+  - path_regex: secrets/infra-01\.yaml$
+    key_groups:
+      - age:
+          - *infra-01
+          - *admin
+
+  # Common secrets (accessible by all hosts)
+  - path_regex: secrets/common\.yaml$
+    key_groups:
+      - age:
+          - *infra-01
+          - *admin
